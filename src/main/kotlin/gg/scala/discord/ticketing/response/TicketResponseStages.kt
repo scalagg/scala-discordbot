@@ -2,6 +2,8 @@ package gg.scala.discord.ticketing.response
 
 import gg.scala.cache.uuid.ScalaStoreUuidCache
 import gg.scala.discord.language.Languages
+import gg.scala.discord.ticketing.context.TicketCreationContext
+import gg.scala.discord.ticketing.context.TicketCreationContexts
 import gg.scala.flavor.service.Configure
 import gg.scala.flavor.service.Service
 
@@ -50,6 +52,27 @@ object TicketResponseStages
         }
     }
 
+    @JvmStatic
+    val CONTEXT = object : TicketResponseStage
+    {
+        // Just going to use category to not
+        // confuse possible ticket creators
+        override fun stageIdentifier() = "Category"
+
+        override fun acceptResponse(response: String): Boolean
+        {
+            return TicketCreationContexts.parse(response) != null
+        }
+
+        override fun formatTranslated(translated: String?): String
+        {
+            return "What is this ticket categorized under?\nChoose one of the following:\n`${
+                TicketCreationContext.values()
+                    .joinToString { it.formattedDisplay }
+            }`"
+        }
+    }
+
     private val orderedStages =
         linkedSetOf<TicketResponseStage>()
 
@@ -58,5 +81,6 @@ object TicketResponseStages
     {
         orderedStages.add(LANGUAGE)
         orderedStages.add(USERNAME)
+        orderedStages.add(CONTEXT)
     }
 }
