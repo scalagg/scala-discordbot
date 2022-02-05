@@ -20,6 +20,13 @@ object TicketResponseStages
         {
             return Languages.find(response) != null
         }
+
+        override fun formatTranslated(translated: String?): String
+        {
+            return "Please choose a language below:\n`${
+                Languages.languages.joinToString { it.getId() }
+            }`"
+        }
     }
 
     private val orderedStages =

@@ -7,5 +7,7 @@ package gg.scala.discord.ticketing.response
 interface TicketResponseStage
 {
     fun stageIdentifier(): String
+
     fun acceptResponse(response: String): Boolean
+    fun formatTranslated(translated: String?): String
 }
