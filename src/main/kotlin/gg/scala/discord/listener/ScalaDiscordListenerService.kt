@@ -1,5 +1,6 @@
 package gg.scala.discord.listener
 
+import gg.scala.discord.listener.impl.LargeContentListener
 import gg.scala.discord.listener.impl.MassMentionListener
 import gg.scala.flavor.inject.Inject
 import gg.scala.flavor.service.Configure
@@ -20,7 +21,8 @@ object ScalaDiscordListenerService
     fun configure()
     {
         listOf(
-            MassMentionListener
+            MassMentionListener,
+            LargeContentListener
         ).forEach {
             jda.addEventListener(it)
         }
