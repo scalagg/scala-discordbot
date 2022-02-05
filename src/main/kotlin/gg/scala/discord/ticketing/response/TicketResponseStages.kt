@@ -1,5 +1,6 @@
 package gg.scala.discord.ticketing.response
 
+import gg.scala.discord.language.Languages
 import gg.scala.flavor.service.Configure
 import gg.scala.flavor.service.Service
 
@@ -11,12 +12,13 @@ import gg.scala.flavor.service.Service
 object TicketResponseStages
 {
     @JvmStatic
-    val LANGUAGE = object : TicketResponseStage {
+    val LANGUAGE = object : TicketResponseStage
+    {
         override fun stageIdentifier() = "Language"
 
         override fun acceptResponse(response: String): Boolean
         {
-            TODO("Not yet implemented")
+            return Languages.find(response) != null
         }
     }
 
@@ -26,6 +28,6 @@ object TicketResponseStages
     @Configure
     fun configure()
     {
-//        orderedStages.add()
+        orderedStages.add(LANGUAGE)
     }
 }
