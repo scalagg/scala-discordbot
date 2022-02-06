@@ -96,3 +96,22 @@ object Dutch : Language
 
     override fun getId() = "Nederlands"
 }
+
+object German : Language
+{
+    override val locale = mutableMapOf<String, String>()
+
+    override fun configure()
+    {
+        locale["invalid"] = "Das ist eine ungültige Antwort, bitte versuchen Sie es erneut!"
+        // default
+        locale["username"] = "Wie lautet Ihr Benutzername im Spiel?"
+        locale["category"] = "In welcher Kategorie ist dieses Ticket kategorisiert?\n`%s`"
+        locale["reason"] = "Warum haben Sie dieses Ticket erstellt?"
+        // extended stuff
+        locale["punishment"] = "Bitte geben Sie Ihre Bestrafungs-ID ein."
+        locale["transaction"] = "Bitte geben Sie Ihre Transaktions-ID ein."
+    }
+
+    override fun getId() = "Deutsch"
+}

@@ -11,7 +11,8 @@ import gg.scala.flavor.service.Service
 object Languages
 {
     val languages = mutableListOf(
-        Spanish, English, Italian, French, Dutch
+        Spanish, English, Italian,
+        French, Dutch, German
     )
 
     fun find(id: String): Language?
