@@ -20,7 +20,7 @@ object TransactionTicketResponse : TicketResponseStage
 
     override fun shouldDisplay(ticket: Ticket): Boolean
     {
-        return ticket.context() == TicketCreationContext.APPEAL
+        return ticket.context() == TicketCreationContext.STORE_SUPPORT
     }
 
     override fun formatTranslated(translated: String?) = translated!!

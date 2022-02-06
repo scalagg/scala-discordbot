@@ -15,8 +15,11 @@ import gg.scala.discord.ticketing.response.TicketResponseStages
 import gg.scala.discord.ticketing.response.TicketResponseStages.stages
 import gg.scala.flavor.inject.Inject
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Emoji
+import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.util.ArrayList
 
 /**
@@ -70,7 +73,7 @@ class Ticket(
     {
         completedStagePrompt = true
 
-        textChannel.history.retrievedHistory
+        textChannel.history.retrievePast(99).complete()
             .forEach { it.delete().queue() }
 
         val manager = textChannel.manager
@@ -97,9 +100,13 @@ class Ticket(
             )
         }
 
-        textChannel.sendMessageEmbeds(
-            embedBuilder.build()
-        ).queue()
+        textChannel.sendMessageEmbeds(embedBuilder.build())
+            .setActionRow(
+                Button.danger("close", "Close")
+            )
+            .queue {
+                it.pin().queue()
+            }
     }
 
     fun invalid(): String = language()

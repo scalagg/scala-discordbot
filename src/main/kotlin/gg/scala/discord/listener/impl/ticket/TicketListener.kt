@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 
 /**
  * @author GrowlyX
@@ -32,6 +33,16 @@ object TicketListener : ListenerAdapter()
                     .setEphemeral(true)
                     .queue()
             }
+        } else if (event.button.id == "close")
+        {
+            event.interaction.reply(
+                "This ticket will be closed in **5 seconds**!"
+            ).complete()
+
+            event.textChannel.delete()
+                .queueAfter(5L, TimeUnit.SECONDS) {
+                    Tickets.tickets.remove(event.textChannel)
+                }
         }
     }
 
