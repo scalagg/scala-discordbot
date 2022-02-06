@@ -1,9 +1,6 @@
 package gg.scala.discord.language
 
-import gg.scala.discord.language.impl.English
-import gg.scala.discord.language.impl.French
-import gg.scala.discord.language.impl.Italian
-import gg.scala.discord.language.impl.Spanish
+import gg.scala.discord.language.impl.*
 import gg.scala.flavor.service.Service
 
 /**
@@ -14,7 +11,7 @@ import gg.scala.flavor.service.Service
 object Languages
 {
     val languages = mutableListOf(
-        Spanish, English, Italian, French
+        Spanish, English, Italian, French, Dutch
     )
 
     fun find(id: String): Language?

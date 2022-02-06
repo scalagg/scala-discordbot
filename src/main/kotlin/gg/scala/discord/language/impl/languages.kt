@@ -27,12 +27,14 @@ object Spanish : Language
 
     override fun configure()
     {
-        locale["invalid-response"] = "Esa no es una respuesta válida, aquí hay algunas a continuación."
-        locale["ign"] = "¿Cuál es tu nombre de usuario en el juego?"
-        locale["why"] = "¿En qué categoría entraría este boleto?\n`%s`"
-        locale["reason"] = "¿Por qué creaste este ticket de soporte?"
-        locale["punish"] = "Proporcione su identificación de castigo (N/A si no está relacionado con el castigo)."
-        locale["transact"] = "Proporcione su ID de transacción (N/A si no está relacionado con la tienda)."
+        locale["invalid"] = "Esa es una respuesta inválida, ¡inténtelo de nuevo!"
+        // default
+        locale["username"] = "¿Cuál es tu nombre de usuario en el juego?"
+        locale["category"] = "¿En qué categoría está clasificado este ticket?\n`%s`"
+        locale["reason"] = "¿Por qué creó este ticket?"
+        // extended stuff
+        locale["punishment"] = "Ingrese su ID de castigo"
+        locale["transaction"] = "Ingrese su ID de transacción"
     }
 
     override fun getId() = "Español"
@@ -44,12 +46,14 @@ object Italian : Language
 
     override fun configure()
     {
-        locale["invalid-response"] = "Non è una risposta valida, eccone alcune qui sotto"
-        locale["ign"] = "Qual è il tuo nome utente nel gioco?"
-        locale["why"] = "In quale categoria rientrerebbe questo biglietto?\n`%s`"
-        locale["reason"] = "Perché hai creato questo ticket di supporto?"
-        locale["punish"] = "Fornisci il tuo ID di punizione (N/A se non è correlato alla punizione)."
-        locale["transact"] = "Fornisci il tuo ID transazione (N/A se non è correlato al negozio)."
+        locale["invalid"] = "Questa è una risposta non valida, per favore riprova!"
+        // default
+        locale["username"] = "Qual è il tuo nome utente di gioco?"
+        locale["category"] = "In cosa è classificato questo ticket?\n`%s`"
+        locale["reason"] = "Perché hai creato questo ticket?"
+        // extended stuff
+        locale["punishment"] = "Inserisci il tuo ID punizione."
+        locale["transaction"] = "Inserisci il tuo ID transazione."
     }
 
     override fun getId() = "Italiano"
@@ -61,13 +65,34 @@ object French : Language
 
     override fun configure()
     {
-        locale["invalid-response"] = "Ce n'est pas une réponse valide, en voici quelques-unes ci-dessous"
-        locale["ign"] = "Quel est votre nom d'utilisateur dans le jeu?"
-        locale["why"] = "Dans quelle catégorie appartiendrait ce billet?\n`%s`"
-        locale["reason"] = "Pourquoi avez-vous créé ce ticket de support?"
-        locale["punish"] = "Fournissez votre identifiant de punition (N/A s'il n'est pas lié à la punition)."
-        locale["transact"] = "Fournissez votre identifiant de transaction (N/A si ce n'est pas lié au magasin)."
+        locale["invalid"] = "C'est une réponse invalide, veuillez réessayer !"
+        // default
+        locale["username"] = "Quel est votre nom d'utilisateur dans le jeu?"
+        locale["category"] = "Dans quelle catégorie ce ticket est-il classé?\n`%s`"
+        locale["reason"] = "Pourquoi avez-vous créé ce ticket?"
+        // extended stuff
+        locale["punishment"] = "Veuillez entrer votre identifiant de punition."
+        locale["transaction"] = "Veuillez entrer votre ID de transaction."
     }
 
-    override fun getId() = "Italiano"
+    override fun getId() = "Français"
+}
+
+object Dutch : Language
+{
+    override val locale = mutableMapOf<String, String>()
+
+    override fun configure()
+    {
+        locale["invalid"] = "Dat is een ongeldig antwoord, probeer het opnieuw!"
+        // default
+        locale["username"] = "Wat is je in-game gebruikersnaam?"
+        locale["category"] = "Waaronder valt dit ticket?\n`%s`"
+        locale["reason"] = "Waarom heb je dit ticket gemaakt?"
+        // extended stuff
+        locale["punishment"] = "Voer uw straf-ID in."
+        locale["transaction"] = "Voer uw transactie-ID in."
+    }
+
+    override fun getId() = "Nederlands"
 }
