@@ -11,7 +11,7 @@ class ScalaDiscordSettings(
     val token: String = "",
     val guild: Long = 927281666836283524L,
     val color: String = "#ffbc00",
-    val supportRoles: String = "Platform Admin,Head Admin,Admin,Senior Mod,Developer"
+    private val supportRoles: String = "Platform Admin,Head Admin,Admin,Senior Mod,Developer"
 )
 {
     fun getSupportRoles(guild: Guild): List<Role>
