@@ -12,8 +12,8 @@ object MemberJoinListener : ListenerAdapter()
     override fun onGuildMemberJoin(event: GuildMemberJoinEvent)
     {
         val channel = event.guild
-            .getTextChannelsByName("arrivals", true)[0]!!
+            .getTextChannelsByName("welcome", true)[0]!!
 
-        channel.sendMessage("Welcome to the Verio Discord Server, " + event.member.asMention + "! \uD83D\uDC4B").queue()
+        channel.sendMessage("Welcome to the **Verio Network** Discord Server, " + event.member.asMention + "! \uD83D\uDC4B").queue()
     }
 }

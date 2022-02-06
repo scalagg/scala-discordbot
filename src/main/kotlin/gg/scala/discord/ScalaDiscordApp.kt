@@ -3,6 +3,7 @@ package gg.scala.discord
 import com.google.gson.LongSerializationPolicy
 import gg.scala.cache.uuid.ScalaStoreUuidCache
 import gg.scala.cache.uuid.impl.LocalUuidCacheTranslator
+import gg.scala.discord.activity.ScalaDiscordActivityRotator
 import gg.scala.discord.command.ScalaDiscordCommandService
 import gg.scala.discord.language.Languages
 import gg.scala.discord.listener.ScalaDiscordListenerService
@@ -62,9 +63,12 @@ object ScalaDiscordApp
         flavor.bind<ScalaDiscordSettings>() to settings
 
         flavor.inject(Tickets)
+        flavor.inject(Languages)
+
         flavor.inject(ScalaDiscordCommandService)
         flavor.inject(ScalaDiscordListenerService)
-        flavor.inject(Languages)
+        flavor.inject(ScalaDiscordActivityRotator)
+
         flavor.inject(TicketResponseStages)
         // uncomment for prod
         // flavor.startup()
