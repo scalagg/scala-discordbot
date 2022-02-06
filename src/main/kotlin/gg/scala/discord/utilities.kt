@@ -1,7 +1,9 @@
 package gg.scala.discord
 
+import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Role
+import java.awt.Color
 
 /**
  * @author GrowlyX
@@ -16,4 +18,14 @@ fun Guild.role(name: String): Role?
     {
         null
     }
+}
+
+fun embed(
+    title: String,
+    vararg description: String
+): EmbedBuilder
+{
+    return EmbedBuilder().setTitle(title)
+        .setDescription(description.joinToString(separator = "\n"))
+        .setColor(Color.decode(ScalaDiscordApp.settings.color))
 }

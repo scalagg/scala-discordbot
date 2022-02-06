@@ -9,6 +9,7 @@ import gg.scala.discord.ticketing.context.TicketCreationContexts
 import gg.scala.discord.ticketing.response.TicketResponse
 import gg.scala.discord.ticketing.response.TicketResponseStage
 import gg.scala.discord.ticketing.response.TicketResponseStages
+import gg.scala.discord.ticketing.response.TicketResponseStages.stages
 import gg.scala.flavor.inject.Inject
 import net.dv8tion.jda.api.entities.TextChannel
 
@@ -25,6 +26,49 @@ class Ticket(
 
     @Inject
     lateinit var settings: ScalaDiscordSettings
+
+    var currentStage = -1
+    var completedStagePrompt = false
+
+    fun startNextStage()
+    {
+        val stagesWithinContext = stages()
+
+        try
+        {
+            val nextStage =
+                stagesWithinContext[currentStage++]
+
+            sendStageMessage(nextStage)
+        } catch (ignored: Exception)
+        {
+            completeStagePrompt()
+        }
+    }
+
+    private fun sendStageMessage(
+        stage: TicketResponseStage
+    )
+    {
+        val language = language()
+        val identifier = stage
+            .stageIdentifier().lowercase()
+
+        val localeMessage = language
+            .locale[identifier]
+
+        textChannel.sendMessage(identifier).queue()
+    }
+
+    private fun completeStagePrompt()
+    {
+        completedStagePrompt = true
+
+        textChannel.history.retrievedHistory
+            .forEach { it.delete().queue() }
+
+
+    }
 
     fun language(): Language
     {

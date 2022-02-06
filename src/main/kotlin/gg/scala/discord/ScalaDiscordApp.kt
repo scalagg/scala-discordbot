@@ -20,12 +20,11 @@ import java.io.File
  */
 object ScalaDiscordApp
 {
-    private lateinit var settings:
-            ScalaDiscordSettings
+    lateinit var settings: ScalaDiscordSettings
 
     private lateinit var client: JDA
 
-    private val flavor = Flavor
+    val flavor = Flavor
         .create<ScalaDiscordApp>()
 
     fun start()
