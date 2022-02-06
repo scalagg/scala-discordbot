@@ -63,6 +63,7 @@ object TicketListener : ListenerAdapter()
                     }
 
                     event.message.reply(ticket.invalid()).queue()
+
                     ticket.sendStageMessage(stage)
                 }
             }

@@ -1,11 +1,8 @@
 package gg.scala.discord
 
 import com.google.gson.LongSerializationPolicy
-import gg.scala.banana.Banana
-import gg.scala.banana.credentials.BananaCredentials
-import gg.scala.banana.options.BananaOptions
 import gg.scala.cache.uuid.ScalaStoreUuidCache
-import gg.scala.cache.uuid.impl.distribution.DistributedRedisUuidCacheTranslator
+import gg.scala.cache.uuid.impl.LocalUuidCacheTranslator
 import gg.scala.discord.settings.ScalaDiscordSettings
 import gg.scala.flavor.Flavor
 import net.dv8tion.jda.api.JDA
@@ -24,7 +21,7 @@ object ScalaDiscordApp
 
     private lateinit var client: JDA
 
-    val flavor = Flavor
+    private val flavor = Flavor
         .create<ScalaDiscordApp>()
 
     fun start()
@@ -53,9 +50,7 @@ object ScalaDiscordApp
         client.awaitReady()
 
         ScalaStoreUuidCache.configure(
-            DistributedRedisUuidCacheTranslator(Banana(
-                BananaCredentials(), BananaOptions("robot")
-            ))
+            LocalUuidCacheTranslator
         )
 
         flavor.bind<JDA>() to client

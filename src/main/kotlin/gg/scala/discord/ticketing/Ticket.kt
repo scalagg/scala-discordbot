@@ -45,7 +45,6 @@ class Ticket(
             sendStageMessage(nextStage)
         } catch (e: Exception)
         {
-            e.printStackTrace()
             completeStagePrompt()
         }
     }

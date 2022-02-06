@@ -39,15 +39,7 @@ object TicketResponseStages
     val USERNAME = object : TicketResponseStage
     {
         override fun stageIdentifier() = "Username"
-
-        override fun acceptResponse(response: String): Boolean
-        {
-            // We're just using this to validate that the
-            // username's an actual registered username.
-            // the returned unique id will not be needed, if we do
-            // need it, we can always grab it from the cache again.
-            return ScalaStoreUuidCache.uniqueId(response) != null
-        }
+        override fun acceptResponse(response: String) = true
 
         override fun formatTranslated(translated: String?) = translated!!
     }
