@@ -35,9 +35,17 @@ object TicketListener : ListenerAdapter()
             }
         } else if (event.button.id == "close")
         {
+            val ticket = Tickets.tickets[event.textChannel]
+                ?: return
+
+            if (ticket.closing)
+                return
+
             event.interaction.reply(
                 "This ticket will be closed in **5 seconds**!"
             ).complete()
+
+            ticket.closing = true
 
             event.textChannel.delete()
                 .queueAfter(5L, TimeUnit.SECONDS) {

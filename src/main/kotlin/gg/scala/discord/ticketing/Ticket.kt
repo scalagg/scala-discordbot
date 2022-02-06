@@ -37,6 +37,8 @@ class Ticket(
     var currentStage = -1
     var completedStagePrompt = false
 
+    var closing = false
+
     fun startNextStage()
     {
         val stagesWithinContext = stages()
