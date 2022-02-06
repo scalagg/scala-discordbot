@@ -67,6 +67,7 @@ class Ticket(
 
     private fun completeStagePrompt()
     {
+        println("Completed")
         completedStagePrompt = true
 
         textChannel.history.retrievedHistory

@@ -3,7 +3,12 @@ package gg.scala.discord
 import com.google.gson.LongSerializationPolicy
 import gg.scala.cache.uuid.ScalaStoreUuidCache
 import gg.scala.cache.uuid.impl.LocalUuidCacheTranslator
+import gg.scala.discord.command.ScalaDiscordCommandService
+import gg.scala.discord.language.Languages
+import gg.scala.discord.listener.ScalaDiscordListenerService
 import gg.scala.discord.settings.ScalaDiscordSettings
+import gg.scala.discord.ticketing.Tickets
+import gg.scala.discord.ticketing.response.TicketResponseStages
 import gg.scala.flavor.Flavor
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
@@ -55,7 +60,14 @@ object ScalaDiscordApp
 
         flavor.bind<JDA>() to client
         flavor.bind<ScalaDiscordSettings>() to settings
-        flavor.startup()
+
+        flavor.inject(Tickets)
+        flavor.inject(ScalaDiscordCommandService)
+        flavor.inject(ScalaDiscordListenerService)
+        flavor.inject(Languages)
+        flavor.inject(TicketResponseStages)
+        // uncomment for prod
+        // flavor.startup()
     }
 
     fun stop()

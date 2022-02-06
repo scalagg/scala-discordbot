@@ -20,13 +20,13 @@ object TicketPanelCommand
     fun onDefault(actor: BaseActorJDA)
     {
         val embed = embed(
-            "\uD83C\uDF9F **Support Ticket**",
+            "\uD83C\uDF9F **Support**",
             "Interact with the button below to create a new support ticket!",
         )
 
         actor.channel.sendMessageEmbeds(embed.build())
             .setActionRow(
-                Button.primary(
+                Button.success(
                     "ticket-creation",
                     Emoji.fromUnicode("\uD83C\uDF9F")
                 ).withLabel("Create a Ticket")

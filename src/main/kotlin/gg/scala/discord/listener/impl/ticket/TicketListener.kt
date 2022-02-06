@@ -59,6 +59,8 @@ object TicketListener : ListenerAdapter()
                         event.message.reply(
                             "That's an invalid language, fallbacking to `English`."
                         ).queue()
+
+                        ticket.startNextStage()
                         return@thenAccept
                     }
 
