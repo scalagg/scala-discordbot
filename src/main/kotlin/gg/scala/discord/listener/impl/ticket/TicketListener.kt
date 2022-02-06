@@ -18,7 +18,21 @@ object TicketListener : ListenerAdapter()
     )
     {
         if (event.button.id == "ticket-creation")
-            Tickets.create(event)
+        {
+            val ticket = Tickets.create(event)
+
+            if (ticket != null)
+            {
+                event.interaction.reply("Your ticket was created, view it here: ${ticket.asMention}.")
+                    .setEphemeral(true)
+                    .queue()
+            } else
+            {
+                event.interaction.reply("You already have an open ticket.")
+                    .setEphemeral(true)
+                    .queue()
+            }
+        }
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent)
@@ -29,7 +43,7 @@ object TicketListener : ListenerAdapter()
 
         if (
             event.member == null ||
-            event.member!!.idLong != ticket.creator
+            event.member!!.idLong != ticket.creator.idLong
         ) return
 
         if (!ticket.completedStagePrompt)
@@ -51,6 +65,9 @@ object TicketListener : ListenerAdapter()
             }.thenAccept { accepted ->
                 if (accepted)
                 {
+                    ticket.addStageResponse(
+                        stage, content
+                    )
                     ticket.startNextStage()
                 } else
                 {

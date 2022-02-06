@@ -15,6 +15,7 @@ import gg.scala.discord.ticketing.response.TicketResponseStages
 import gg.scala.discord.ticketing.response.TicketResponseStages.stages
 import gg.scala.flavor.inject.Inject
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
 import java.util.ArrayList
 
@@ -23,7 +24,7 @@ import java.util.ArrayList
  * @since 2/5/2022
  */
 class Ticket(
-    val creator: Long,
+    val creator: Member,
     private val textChannel: TextChannel
 )
 {
@@ -67,23 +68,12 @@ class Ticket(
 
     private fun completeStagePrompt()
     {
-        println("Completed")
         completedStagePrompt = true
 
         textChannel.history.retrievedHistory
             .forEach { it.delete().queue() }
 
-        val creatorMember = textChannel.guild
-            .getMemberById(creator)!!
-
         val manager = textChannel.manager
-            .putPermissionOverride(
-                creatorMember, 3072L, 8192L
-            )
-            .putPermissionOverride(
-                textChannel.guild.role("@everyone")!!,
-                0L, 1024L
-            )
 
         for (supportRole in ScalaDiscordApp.settings.getSupportRoles(textChannel.guild))
         {
@@ -96,7 +86,7 @@ class Ticket(
 
         val embedBuilder = embed(
             "**Responses**",
-            "Here are ${creatorMember.asMention}'s responses:"
+            "Here are ${creator.asMention}'s responses:"
         )
 
         for (response in responses)
@@ -126,5 +116,10 @@ class Ticket(
         return responses[TicketResponseStages.CONTEXT]
             ?.let { TicketCreationContexts.parse(it.content) }
             ?: TicketCreationContext.OTHER
+    }
+
+    fun addStageResponse(stage: TicketResponseStage, content: String)
+    {
+        responses[stage] = TicketResponse(content)
     }
 }

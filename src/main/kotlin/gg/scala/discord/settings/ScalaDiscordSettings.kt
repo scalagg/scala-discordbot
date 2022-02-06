@@ -17,6 +17,6 @@ class ScalaDiscordSettings(
     fun getSupportRoles(guild: Guild): List<Role>
     {
         return supportRoles.split(",")
-            .mapNotNull { guild.getRoleById(it) }
+            .mapNotNull { guild.getRolesByName(it, true)[0] }
     }
 }

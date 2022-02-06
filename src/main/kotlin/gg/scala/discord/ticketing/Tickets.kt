@@ -2,6 +2,7 @@ package gg.scala.discord.ticketing
 
 import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.embed
+import gg.scala.discord.role
 import gg.scala.flavor.service.Service
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
@@ -16,7 +17,7 @@ object Tickets
 {
     val tickets = mutableMapOf<TextChannel, Ticket>()
 
-    fun create(event: ButtonInteractionEvent)
+    fun create(event: ButtonInteractionEvent): TextChannel?
     {
         val ticketName = "ticket-${
             event.member!!.user.name
@@ -29,7 +30,7 @@ object Tickets
                 .firstOrNull {
                     it.name.contains(event.member!!.user.name.lowercase())
                 } != null
-        ) return
+        ) return null
 
         val textChannel = event.guild!!
             .createTextChannel(
@@ -37,8 +38,18 @@ object Tickets
             )
             .complete()
 
+        textChannel.manager
+            .putPermissionOverride(
+                event.member!!, 3072L, 8192L
+            )
+            .putPermissionOverride(
+                textChannel.guild.role("@everyone")!!,
+                0L, 1024L
+            )
+            .queue()
+
         val ticket = Ticket(
-            event.member!!.idLong, textChannel
+            event.member!!, textChannel
         )
 
         textChannel.sendMessageEmbeds(
@@ -53,6 +64,7 @@ object Tickets
         }
 
         tickets[textChannel] = ticket
+        return textChannel
     }
 
     private const val SALT = "abcdefghijklmnopqrstuvwxyz1234567890"
