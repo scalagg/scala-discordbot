@@ -2,8 +2,11 @@ package gg.scala.discord.ticketing.response
 
 import gg.scala.cache.uuid.ScalaStoreUuidCache
 import gg.scala.discord.language.Languages
+import gg.scala.discord.ticketing.Ticket
 import gg.scala.discord.ticketing.context.TicketCreationContext
 import gg.scala.discord.ticketing.context.TicketCreationContexts
+import gg.scala.discord.ticketing.response.extended.PunishmentTicketResponse
+import gg.scala.discord.ticketing.response.extended.TransactionTicketResponse
 import gg.scala.flavor.service.Configure
 import gg.scala.flavor.service.Service
 
@@ -46,10 +49,7 @@ object TicketResponseStages
             return ScalaStoreUuidCache.uniqueId(response) != null
         }
 
-        override fun formatTranslated(translated: String?): String
-        {
-            return "Please enter your Minecraft IGN:"
-        }
+        override fun formatTranslated(translated: String?) = translated!!
     }
 
     @JvmStatic
@@ -66,15 +66,29 @@ object TicketResponseStages
 
         override fun formatTranslated(translated: String?): String
         {
-            return "What is this ticket categorized under?\nChoose one of the following:\n`${
-                TicketCreationContext.values()
-                    .joinToString { it.formattedDisplay }
-            }`"
+            return String.format(
+                translated!!, TicketCreationContext.values()
+                .joinToString { it.formattedDisplay }
+            )
         }
+    }
+
+    @JvmStatic
+    val REASONING = object : TicketResponseStage
+    {
+        override fun stageIdentifier() = "Reason"
+        override fun acceptResponse(response: String) = true
+
+        override fun formatTranslated(translated: String?) = translated!!
     }
 
     private val orderedStages =
         linkedSetOf<TicketResponseStage>()
+
+    private fun getOrderedStagesWithinContext(ticket: Ticket) =
+        orderedStages.filter { it.shouldDisplay(ticket) }
+
+    fun Ticket.stages() = getOrderedStagesWithinContext(this)
 
     @Configure
     fun configure()
@@ -82,5 +96,9 @@ object TicketResponseStages
         orderedStages.add(LANGUAGE)
         orderedStages.add(USERNAME)
         orderedStages.add(CONTEXT)
+        orderedStages.add(REASONING)
+        // optional, extended responses
+        orderedStages.add(PunishmentTicketResponse)
+        orderedStages.add(TransactionTicketResponse)
     }
 }

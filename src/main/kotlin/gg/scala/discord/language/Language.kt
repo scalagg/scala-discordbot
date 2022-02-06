@@ -9,4 +9,9 @@ interface Language
     fun getId(): String
     val locale: Map<String, String>
     fun configure()
+
+    fun getTranslation(id: String): String?
+    {
+        return locale[id]
+    }
 }

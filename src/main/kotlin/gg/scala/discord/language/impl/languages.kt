@@ -8,12 +8,14 @@ object English : Language
 
     override fun configure()
     {
-        locale["invalid-response"] = "That's not a valid response, here are some below"
-        locale["ign"] = "What is your in-game username?"
-        locale["why"] = "What category would this ticket fall in?\n`%s`"
-        locale["reason"] = "Why did you create this support ticket?"
-        locale["punish"] = "Provide your punishment ID (Use N/A if not punishment related)."
-        locale["transact"] = "Provide your transaction ID (Use N/A if not store related)."
+        locale["invalid"] = "That's an invalid response, please try again!"
+        // default
+        locale["username"] = "What is your in-game username?"
+        locale["category"] = "What is this ticket categorized under?\n`%s`"
+        locale["reason"] = "Why did you create this ticket?"
+        // extended stuff
+        locale["punishment"] = "Please enter your punishment ID."
+        locale["transaction"] = "Please enter your transaction ID."
     }
 
     override fun getId() = "English"
