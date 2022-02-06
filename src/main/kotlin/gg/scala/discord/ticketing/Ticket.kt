@@ -1,5 +1,6 @@
 package gg.scala.discord.ticketing
 
+import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.embed
 import gg.scala.discord.language.Language
 import gg.scala.discord.language.Languages
@@ -29,9 +30,6 @@ class Ticket(
     private val responses =
         mutableMapOf<TicketResponseStage, TicketResponse>()
 
-    @Inject
-    lateinit var settings: ScalaDiscordSettings
-
     var currentStage = -1
     var completedStagePrompt = false
 
@@ -42,11 +40,12 @@ class Ticket(
         try
         {
             val nextStage =
-                stagesWithinContext[currentStage++]
+                stagesWithinContext[++currentStage]
 
             sendStageMessage(nextStage)
-        } catch (ignored: Exception)
+        } catch (e: Exception)
         {
+            e.printStackTrace()
             completeStagePrompt()
         }
     }
@@ -86,7 +85,7 @@ class Ticket(
                 0L, 1024L
             )
 
-        for (supportRole in settings.getSupportRoles(textChannel.guild))
+        for (supportRole in ScalaDiscordApp.settings.getSupportRoles(textChannel.guild))
         {
             manager.putPermissionOverride(
                 supportRole, listOf(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), listOf()
@@ -127,10 +126,5 @@ class Ticket(
         return responses[TicketResponseStages.CONTEXT]
             ?.let { TicketCreationContexts.parse(it.content) }
             ?: TicketCreationContext.OTHER
-    }
-
-    fun username(): String
-    {
-        return responses[TicketResponseStages.USERNAME]?.content!!
     }
 }

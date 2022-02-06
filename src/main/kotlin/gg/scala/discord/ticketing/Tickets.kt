@@ -37,11 +37,9 @@ object Tickets
             )
             .complete()
 
-        val ticket = ScalaDiscordApp.flavor
-            .injected<Ticket>(
-                event.member!!.idLong,
-                textChannel
-            )
+        val ticket = Ticket(
+            event.member!!.idLong, textChannel
+        )
 
         textChannel.sendMessageEmbeds(
             embed(
@@ -53,6 +51,8 @@ object Tickets
             ticket.startNextStage()
             textChannel.sendMessage(event.member!!.user.asMention).queue()
         }
+
+        tickets[textChannel] = ticket
     }
 
     private const val SALT = "abcdefghijklmnopqrstuvwxyz1234567890"

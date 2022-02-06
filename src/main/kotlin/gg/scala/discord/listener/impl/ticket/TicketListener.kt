@@ -17,7 +17,7 @@ object TicketListener : ListenerAdapter()
         event: ButtonInteractionEvent
     )
     {
-        if (event.button.label == "ticket-creation")
+        if (event.button.id == "ticket-creation")
             Tickets.create(event)
     }
 

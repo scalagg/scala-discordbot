@@ -1,6 +1,7 @@
 package gg.scala.discord.language
 
 import gg.scala.discord.language.impl.*
+import gg.scala.flavor.service.Configure
 import gg.scala.flavor.service.Service
 
 /**
@@ -14,6 +15,12 @@ object Languages
         Spanish, English, Italian,
         French, Dutch, German
     )
+
+    @Configure
+    fun configure()
+    {
+        languages.forEach(Language::configure)
+    }
 
     fun find(id: String): Language?
     {
