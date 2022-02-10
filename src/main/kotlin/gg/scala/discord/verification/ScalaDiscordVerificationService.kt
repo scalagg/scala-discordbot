@@ -86,6 +86,6 @@ object ScalaDiscordVerificationService
     {
         return Captcha.Builder(200, 70)
             .addBackground().addBorder()
-            .addText().addNoise().build()
+            .addText().addNoise().addNoise().build()
     }
 }
