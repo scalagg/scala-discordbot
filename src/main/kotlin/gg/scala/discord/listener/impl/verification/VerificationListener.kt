@@ -48,7 +48,8 @@ object VerificationListener : ListenerAdapter()
             return
         }
 
-
+        if (event.message.author.isBot)
+            return
 
         val guildId = ScalaDiscordApp
             .settings.guild
@@ -58,13 +59,7 @@ object VerificationListener : ListenerAdapter()
             ?: return
 
         val captcha = ScalaDiscordVerificationService
-            .registry[event.privateChannel.user.id]
-
-        if (captcha == null)
-        {
-            println("captcah nulee")
-            return
-        }
+            .registry[event.privateChannel.user.id] ?: return
 
         if (captcha.isCorrect(event.message.contentRaw))
         {

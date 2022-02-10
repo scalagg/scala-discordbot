@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import java.io.ByteArrayOutputStream
+import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
 /**
@@ -58,7 +59,7 @@ object ScalaDiscordVerificationService
             privateChannel.sendMessageEmbeds(embed.build())
                 .queue {
                     val captcha = captcha()
-                    registry[member.id] = captcha()
+                    registry[member.id] = captcha
 
                     val stream = ByteArrayOutputStream()
 
@@ -73,13 +74,15 @@ object ScalaDiscordVerificationService
                 }
         } catch (ignored: Exception)
         {
-            event.reply("We were unable to send you a private message! Are your DMs open?")
+            event.reply("We were unable to send you a private message! Are you allowing private messages?")
                 .setEphemeral(true).queue()
             return
         }
 
-        event.reply("We sent you a message, check your DMs!")
-            .setEphemeral(true).queue()
+        event.reply("We sent you a message, check your private messages!")
+            .setEphemeral(true).queue {
+                it.deleteOriginal().queueAfter(5L, TimeUnit.SECONDS)
+            }
     }
 
     private fun captcha(): Captcha
