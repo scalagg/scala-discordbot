@@ -4,6 +4,7 @@ import gg.scala.discord.listener.impl.LargeContentListener
 import gg.scala.discord.listener.impl.MassMentionListener
 import gg.scala.discord.listener.impl.MemberJoinListener
 import gg.scala.discord.listener.impl.ticket.TicketListener
+import gg.scala.discord.listener.impl.verification.VerificationListener
 import gg.scala.flavor.inject.Inject
 import gg.scala.flavor.service.Configure
 import gg.scala.flavor.service.Service
@@ -26,7 +27,8 @@ object ScalaDiscordListenerService
             MassMentionListener,
             LargeContentListener,
             MemberJoinListener,
-            TicketListener
+            TicketListener,
+            VerificationListener
         ).forEach {
             jda.addEventListener(it)
         }

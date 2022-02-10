@@ -28,7 +28,7 @@ import java.util.ArrayList
  */
 class Ticket(
     val creator: Member,
-    private val textChannel: TextChannel
+    val textChannel: TextChannel
 )
 {
     private val responses =

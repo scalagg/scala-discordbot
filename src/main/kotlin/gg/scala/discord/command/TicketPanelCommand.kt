@@ -13,11 +13,32 @@ import revxrsal.commands.jda.core.BaseActorJDA
  */
 object TicketPanelCommand
 {
+    @Command("verification-panel")
+    @RolePermission(
+        names = ["SuperPerms"]
+    )
+    fun onVerifyPanel(actor: BaseActorJDA)
+    {
+        val embed = embed(
+            "**Verification**",
+            "Interact with the button below to verify yourself!",
+        )
+
+        actor.channel.sendMessageEmbeds(embed.build())
+            .setActionRow(
+                Button.secondary(
+                    "verification",
+                    "Verify yourself"
+                )
+            )
+            .queue()
+    }
+
     @Command("ticket-panel")
     @RolePermission(
         names = ["SuperPerms"]
     )
-    fun onDefault(actor: BaseActorJDA)
+    fun onTicketPanel(actor: BaseActorJDA)
     {
         val embed = embed(
             "\uD83C\uDF9F **Support**",

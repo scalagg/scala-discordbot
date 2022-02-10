@@ -2,6 +2,8 @@ package gg.scala.discord.listener.impl.ticket
 
 import gg.scala.discord.ticketing.Tickets
 import gg.scala.discord.ticketing.response.TicketResponseStages.stages
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -14,6 +16,16 @@ import java.util.concurrent.TimeUnit
  */
 object TicketListener : ListenerAdapter()
 {
+    override fun onGuildMemberRemove(event: GuildMemberRemoveEvent)
+    {
+        val ticket = Tickets.tickets.values
+            .firstOrNull { it.creator == event.member }
+            ?: return
+
+        ticket.textChannel.delete().queue()
+        Tickets.tickets.remove(ticket.textChannel)
+    }
+
     override fun onButtonInteraction(
         event: ButtonInteractionEvent
     )
@@ -56,6 +68,14 @@ object TicketListener : ListenerAdapter()
 
     override fun onMessageReceived(event: MessageReceivedEvent)
     {
+        try
+        {
+            event.textChannel
+        } catch (ignored: Exception)
+        {
+            return
+        }
+
         val ticket = Tickets
             .tickets[event.textChannel]
             ?: return
