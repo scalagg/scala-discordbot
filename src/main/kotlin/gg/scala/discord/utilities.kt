@@ -27,5 +27,5 @@ fun embed(
 {
     return EmbedBuilder().setTitle(title)
         .setDescription(description.joinToString(separator = "\n"))
-        .setColor(Color.decode(ScalaDiscordApp.settings.color))
+        .setColor(Color.decode("#2f3136"))
 }

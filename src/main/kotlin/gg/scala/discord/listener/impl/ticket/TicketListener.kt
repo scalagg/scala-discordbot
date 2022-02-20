@@ -2,11 +2,11 @@ package gg.scala.discord.listener.impl.ticket
 
 import gg.scala.discord.ticketing.Tickets
 import gg.scala.discord.ticketing.response.TicketResponseStages.stages
-import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
@@ -45,24 +45,25 @@ object TicketListener : ListenerAdapter()
                     .setEphemeral(true)
                     .queue()
             }
-        } else if (event.button.id == "close")
+        } else if (event.button.id == "close-ticket")
         {
-            val ticket = Tickets.tickets[event.textChannel]
+            val ticket = Tickets
+                .tickets[event.textChannel]
                 ?: return
 
             if (ticket.closing)
                 return
 
-            event.interaction.reply(
-                "This ticket will be closed in **5 seconds**!"
-            ).complete()
-
             ticket.closing = true
 
-            event.textChannel.delete()
-                .queueAfter(5L, TimeUnit.SECONDS) {
-                    Tickets.tickets.remove(event.textChannel)
-                }
+            event.interaction.editButton(
+                Button.danger("close-ticket", "Closing ticket... (5 seconds)")
+            ).queue {
+                event.textChannel.delete()
+                    .queueAfter(5L, TimeUnit.SECONDS) {
+                        Tickets.tickets.remove(event.textChannel)
+                    }
+            }
         }
     }
 

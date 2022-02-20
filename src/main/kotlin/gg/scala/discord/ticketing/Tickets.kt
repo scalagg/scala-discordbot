@@ -6,6 +6,7 @@ import gg.scala.discord.role
 import gg.scala.flavor.service.Service
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import java.util.*
 import kotlin.random.Random
 
 /**
@@ -17,26 +18,35 @@ object Tickets
 {
     val tickets = mutableMapOf<TextChannel, Ticket>()
 
+    private val encoder = Base64.getEncoder()
+    private val decoder = Base64.getDecoder()
+
     fun create(event: ButtonInteractionEvent): TextChannel?
     {
         val ticketName = "ticket-${
             event.member!!.user.name
-        }-${
-            generateRandomString()
         }"
+
+        val memberId = encoder.encodeToString(
+            event.member!!.id.toByteArray()
+        )
 
         if (
             event.message.category!!.channels
-                .firstOrNull {
-                    it.name.contains(event.member!!.user.name.lowercase())
-                } != null
+                .any {
+                    it.guild.getTextChannelById(it.idLong)
+                        ?.let { channel -> channel.topic == memberId } == true
+                }
         ) return null
 
+        // TODO: use .queue()
         val textChannel = event.guild!!
             .createTextChannel(
                 ticketName, event.message.category
             )
             .complete()
+
+        textChannel.manager.setTopic(memberId).queue()
 
         textChannel.manager
             .putPermissionOverride(
@@ -69,11 +79,11 @@ object Tickets
 
     private const val SALT = "abcdefghijklmnopqrstuvwxyz1234567890"
 
-    private fun generateRandomString(): String
+    fun generateRandomString(): String
     {
         val saltedString = StringBuilder()
 
-        while (saltedString.length < 5)
+        while (saltedString.length < 8)
         {
             val index = (Random.nextFloat() * SALT.length.toFloat()).toInt()
             saltedString.append(SALT[index])

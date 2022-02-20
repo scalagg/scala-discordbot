@@ -1,15 +1,18 @@
 package gg.scala.discord.verification
 
 import com.lamergameryt.lamercaptcha.Captcha
+import com.lamergameryt.lamercaptcha.backgrounds.GradiatedBackgroundProducer
+import com.lamergameryt.lamercaptcha.text.producer.TextProducer
 import gg.scala.discord.embed
+import gg.scala.discord.role
+import gg.scala.discord.ticketing.Tickets
 import gg.scala.flavor.inject.Inject
-import gg.scala.flavor.service.Configure
 import gg.scala.flavor.service.Service
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import java.awt.Color
 import java.io.ByteArrayOutputStream
-import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
 /**
@@ -28,6 +31,17 @@ object ScalaDiscordVerificationService
         member: Member, event: ButtonInteractionEvent
     )
     {
+        if (
+            member.roles.contains(
+                event.guild!!.role("Player")
+            )
+        )
+        {
+            event.reply("You're already verified in our discord!")
+                .setEphemeral(true).queue()
+            return
+        }
+
         if (registry[member.id] != null)
         {
             event.reply("We already sent you a message! If you did not receive it, please rejoin the discord server.")
@@ -80,15 +94,22 @@ object ScalaDiscordVerificationService
         }
 
         event.reply("We sent you a message, check your private messages!")
-            .setEphemeral(true).queue {
-                it.deleteOriginal().queueAfter(5L, TimeUnit.SECONDS)
-            }
+            .setEphemeral(true).queue()
     }
+
+    private val textProducer = TextProducer {
+        Tickets.generateRandomString()
+    }
+
+    private val gradient = GradiatedBackgroundProducer(
+        Color.decode("#27aae1"), Color.decode("#014bb0")
+    )
 
     private fun captcha(): Captcha
     {
-        return Captcha.Builder(200, 70)
-            .addBackground().addBorder()
-            .addText().addNoise().addNoise().build()
+        return Captcha.Builder(300, 70)
+            .addBackground(gradient)
+            .addText(textProducer)
+            .addNoise().addNoise().build()
     }
 }

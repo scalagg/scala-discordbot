@@ -1,8 +1,8 @@
 package gg.scala.discord.listener.impl
 
-import gg.scala.discord.role
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import java.time.Duration
 
 /**
  * @author GrowlyX
@@ -14,17 +14,12 @@ object LargeContentListener : ListenerAdapter()
     {
         if (event.message.contentRaw.length >= 1700)
         {
-            val role = event.guild.role("muted")
             event.message.delete().queue()
+            event.guild.timeoutFor(event.member!!, Duration.ofDays(365))
 
-            if (role != null)
-            {
-                event.guild.addRoleToMember(event.member!!, role).queue()
-
-                event.channel.sendMessage(
-                     "${event.member!!.asMention} has been permanently muted for `sending large messages`."
-                ).queue()
-            }
+            event.channel.sendMessage(
+                "${event.member!!.asMention} has been muted for `sending large messages`."
+            ).queue()
         }
     }
 }

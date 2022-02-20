@@ -104,10 +104,12 @@ class Ticket(
 
         textChannel.sendMessageEmbeds(embedBuilder.build())
             .setActionRow(
-                Button.danger("close", "Close")
+                Button.danger("close-ticket", "Click to close")
             )
             .queue {
-                it.pin().queue()
+                it.pin().queue {
+                    textChannel.sendMessage("${creator.asMention}, please wait patiently as a staff member responds to this ticket.").queue()
+                }
             }
     }
 

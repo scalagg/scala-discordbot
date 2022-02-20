@@ -22,11 +22,17 @@ object TicketPanelCommand
         val embed = embed(
             "**Verification**",
             "Interact with the button below to verify yourself!",
-        )
+            "",
+            "**INFO:**",
+            " - Not receiving a message? Make sure you have private messages enabled!",
+            " - Have any other questions? Create a ticket in <#942211006199906354>!"
+        ).apply {
+            setImage("https://cdn.discordapp.com/attachments/918716751137603644/945082006600056932/unknown.png")
+        }
 
         actor.channel.sendMessageEmbeds(embed.build())
             .setActionRow(
-                Button.secondary(
+                Button.success(
                     "verification",
                     "Verify yourself"
                 )
@@ -41,16 +47,22 @@ object TicketPanelCommand
     fun onTicketPanel(actor: BaseActorJDA)
     {
         val embed = embed(
-            "\uD83C\uDF9F **Support**",
-            "Interact with the button below to create a new support ticket!",
-        )
+            "**Support**",
+            "Interact with the button below to create a support ticket!",
+            "",
+            "**INFO:**",
+            " - Please wait patiently as one of our staff members respond.",
+            " - Please respond to all questions (staff members will not respond to the ticket unless they are complete)!"
+        ).apply {
+            setImage("https://cdn.discordapp.com/attachments/918716751137603644/945083169961558106/unknown.png")
+        }
 
         actor.channel.sendMessageEmbeds(embed.build())
             .setActionRow(
                 Button.success(
                     "ticket-creation",
                     Emoji.fromUnicode("\uD83C\uDF9F")
-                ).withLabel("Create a Ticket")
+                ).withLabel("Create a ticket")
             )
             .queue()
     }
