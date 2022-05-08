@@ -75,41 +75,46 @@ class Ticket(
     {
         completedStagePrompt = true
 
-        textChannel.history.retrievePast(99).complete()
-            .forEach { it.delete().queue() }
-
-        val manager = textChannel.manager
-
-        for (supportRole in ScalaDiscordApp.settings.getSupportRoles(textChannel.guild))
-        {
-            manager.putPermissionOverride(
-                supportRole, listOf(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), listOf()
-            )
-        }
-
-        manager.queue()
-
-        val embedBuilder = embed(
-            "**Responses**",
-            "Here are ${creator.asMention}'s responses:"
-        )
-
-        for (response in responses)
-        {
-            embedBuilder.addField(
-                response.key.stageIdentifier(),
-                response.value.content, true
-            )
-        }
-
-        textChannel.sendMessageEmbeds(embedBuilder.build())
-            .setActionRow(
-                Button.danger("close-ticket", "Click to close")
-            )
+        textChannel.history
+            .retrievePast(99)
             .queue {
-                it.pin().queue {
-                    textChannel.sendMessage("${creator.asMention}, please wait patiently as a staff member responds to this ticket.").queue()
+                it.forEach { message ->
+                    message.delete().queue()
                 }
+
+                val manager = textChannel.manager
+
+                for (supportRole in ScalaDiscordApp.settings.getSupportRoles(textChannel.guild))
+                {
+                    manager.putPermissionOverride(
+                        supportRole, listOf(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), listOf()
+                    )
+                }
+
+                manager.queue()
+
+                val embedBuilder = embed(
+                    "**Responses**",
+                    "Here are ${creator.asMention}'s responses:"
+                )
+
+                for (response in responses)
+                {
+                    embedBuilder.addField(
+                        response.key.stageIdentifier(),
+                        response.value.content, true
+                    )
+                }
+
+                textChannel.sendMessageEmbeds(embedBuilder.build())
+                    .setActionRow(
+                        Button.danger("close-ticket", "Click to close")
+                    )
+                    .queue { message ->
+                        message.pin().queue {
+                            textChannel.sendMessage("${creator.asMention}, please wait patiently as a staff member responds to this ticket.").queue()
+                        }
+                    }
             }
     }
 

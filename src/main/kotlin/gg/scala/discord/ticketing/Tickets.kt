@@ -1,6 +1,5 @@
 package gg.scala.discord.ticketing
 
-import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.embed
 import gg.scala.discord.role
 import gg.scala.flavor.service.Service

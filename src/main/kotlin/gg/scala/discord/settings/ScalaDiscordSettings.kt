@@ -11,10 +11,9 @@ import net.dv8tion.jda.api.entities.Role
  */
 class ScalaDiscordSettings(
     val token: String = "",
-    val guild: Long = 927281666836283524L,
-    val color: String = "#ffbc00",
+    val guild: Long = 972886115667288095L,
     val activities: List<ScalaDiscordActivity> = mutableListOf(
-        ScalaDiscordActivity(Activity.ActivityType.PLAYING, "na.verio.cc"),
+        ScalaDiscordActivity(Activity.ActivityType.PLAYING, "glade.gg"),
         ScalaDiscordActivity(Activity.ActivityType.COMPETING, "a tournament"),
         ScalaDiscordActivity(Activity.ActivityType.WATCHING, "over the discord"),
     ),
@@ -24,6 +23,10 @@ class ScalaDiscordSettings(
     fun getSupportRoles(guild: Guild): List<Role>
     {
         return supportRoles.split(",")
-            .mapNotNull { guild.getRolesByName(it, true)[0] }
+            .mapNotNull {
+                kotlin.runCatching {
+                    guild.getRolesByName(it, true)[0]
+                }.getOrNull()
+            }
     }
 }

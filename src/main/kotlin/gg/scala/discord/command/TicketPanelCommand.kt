@@ -15,7 +15,7 @@ object TicketPanelCommand
 {
     @Command("verification-panel")
     @RolePermission(
-        names = ["SuperPerms"]
+        names = ["Permissions"]
     )
     fun onVerifyPanel(actor: BaseActorJDA)
     {
@@ -42,7 +42,7 @@ object TicketPanelCommand
 
     @Command("ticket-panel")
     @RolePermission(
-        names = ["SuperPerms"]
+        names = ["Permissions"]
     )
     fun onTicketPanel(actor: BaseActorJDA)
     {

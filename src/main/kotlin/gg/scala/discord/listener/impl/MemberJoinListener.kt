@@ -14,6 +14,6 @@ object MemberJoinListener : ListenerAdapter()
         val channel = event.guild
             .getTextChannelsByName("arrivals", true)[0]!!
 
-        channel.sendMessage("Welcome to the **Verio Network** Discord Server, " + event.member.asMention + "!").queue()
+        channel.sendMessage("Welcome to the **Glade Network** Discord Server, " + event.member.asMention + "!").queue()
     }
 }

@@ -6,8 +6,8 @@ package gg.scala.discord.language
  */
 interface Language
 {
-    fun getId(): String
     val locale: Map<String, String>
+    fun getId(): String
     fun configure()
 
     fun getTranslation(id: String): String?

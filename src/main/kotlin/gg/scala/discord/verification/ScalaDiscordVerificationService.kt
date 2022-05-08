@@ -83,7 +83,7 @@ object ScalaDiscordVerificationService
 
                     privateChannel.sendFile(
                         stream.toByteArray(),
-                        "sca-captcha.png"
+                        "sccaptcha.png"
                     ).queue()
                 }
         } catch (ignored: Exception)
