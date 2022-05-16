@@ -15,17 +15,21 @@ object TicketPanelCommand
 {
     @Command("verification-panel")
     @RolePermission(
-        names = ["Permissions"]
+        names = ["Developer"]
     )
     fun onVerifyPanel(actor: BaseActorJDA)
     {
+        val channel = actor.guild
+            .getTextChannelsByName("create-a-ticket", true)
+            .firstOrNull()
+
         val embed = embed(
             "**Verification**",
             "Interact with the button below to verify yourself!",
             "",
             "**INFO:**",
             " - Not receiving a message? Make sure you have private messages enabled!",
-            " - Have any other questions? Create a ticket in <#942211006199906354>!"
+            " - Have any other questions? Create a ticket in <#${channel?.id}>!"
         ).apply {
             setImage("https://cdn.discordapp.com/attachments/918716751137603644/945082006600056932/unknown.png")
         }
@@ -42,7 +46,7 @@ object TicketPanelCommand
 
     @Command("ticket-panel")
     @RolePermission(
-        names = ["Permissions"]
+        names = ["Developer"]
     )
     fun onTicketPanel(actor: BaseActorJDA)
     {

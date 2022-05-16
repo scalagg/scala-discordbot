@@ -42,9 +42,18 @@ object ScalaDiscordActivityRotator : Runnable
             val activity = settings
                 .activities[++currentIndex]
 
-            jda.presence.activity = Activity.of(
-                activity.type, activity.value
-            )
+            jda.presence.activity =
+                if (activity.type == Activity.ActivityType.STREAMING)
+                {
+                    Activity.of(
+                        activity.type, activity.value, activity.url
+                    )
+                } else
+                {
+                    Activity.of(
+                        activity.type, activity.value
+                    )
+                }
         } catch (ignored: Exception)
         {
             currentIndex = -1

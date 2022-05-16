@@ -8,5 +8,6 @@ import net.dv8tion.jda.api.entities.Activity
  */
 data class ScalaDiscordActivity(
     val type: Activity.ActivityType,
-    val value: String
+    val value: String,
+    val url: String = ""
 )
