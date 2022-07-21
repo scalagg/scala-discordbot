@@ -14,17 +14,8 @@ object MemberJoinListener : ListenerAdapter()
         val channel = event.guild
             .getTextChannelsByName("arrivals", true)[0]!!
 
-        event.guild
-            .addRoleToMember(
-                event.member,
-                event.guild
-                    .getRoleById(
-                        "779419819056693249"
-                    )!!
-            )
-
         channel.sendMessage(
-            "Welcome to the **Glade Network** Discord Server, " + event.member.asMention + "!"
+            "Welcome to the **PotPvP Network** Discord Server, " + event.member.asMention + "!"
         ).queue()
     }
 }

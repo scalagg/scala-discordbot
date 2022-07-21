@@ -24,21 +24,19 @@ object TicketPanelCommand
             .firstOrNull()
 
         val embed = embed(
-            "**Verification**",
+            "\uD83D\uDEE1️ **Verification**",
             "Interact with the button below to verify yourself!",
             "",
             "**INFO:**",
             " - Not receiving a message? Make sure you have private messages enabled!",
             " - Have any other questions? Create a ticket in <#${channel?.id}>!"
-        ).apply {
-            setImage("https://cdn.discordapp.com/attachments/918716751137603644/945082006600056932/unknown.png")
-        }
+        )
 
         actor.channel.sendMessageEmbeds(embed.build())
             .setActionRow(
                 Button.success(
                     "verification",
-                    "Verify yourself"
+                    "Start verification process"
                 )
             )
             .queue()
@@ -51,22 +49,43 @@ object TicketPanelCommand
     fun onTicketPanel(actor: BaseActorJDA)
     {
         val embed = embed(
-            "**Support**",
+            "\uD83C\uDF9F **Support**",
             "Interact with the button below to create a support ticket!",
             "",
             "**INFO:**",
             " - Please wait patiently as one of our staff members respond.",
             " - Please respond to all questions (staff members will not respond to the ticket unless they are complete)!"
-        ).apply {
-            setImage("https://cdn.discordapp.com/attachments/918716751137603644/945083169961558106/unknown.png")
-        }
+        )
 
         actor.channel.sendMessageEmbeds(embed.build())
             .setActionRow(
                 Button.success(
                     "ticket-creation",
-                    Emoji.fromUnicode("\uD83C\uDF9F")
-                ).withLabel("Create a ticket")
+                    "Create a ticket"
+                )
+            )
+            .queue()
+    }
+
+    @Command("link-panel")
+    @RolePermission(
+        names = ["Developer"]
+    )
+    fun onSyncPanel(actor: BaseActorJDA)
+    {
+        val embed = embed(
+            "\uD83D\uDD17 **Discord Link**",
+            "Interact with the button below to link your discord account!",
+            "",
+            "**INFO:**",
+            " - Our system may be slow at times, please contact an administrator if an issue occurs."
+        )
+
+        actor.channel.sendMessageEmbeds(embed.build())
+            .setActionRow(
+                Button.success(
+                    "discord-syncing", "Link your account"
+                )
             )
             .queue()
     }

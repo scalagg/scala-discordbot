@@ -67,7 +67,6 @@ object ScalaDiscordVerificationService
             "Please respond with the following code to verify yourself as a",
             "human and gain access to the Discord server."
         )
-
         try
         {
             privateChannel.sendMessageEmbeds(embed.build())
@@ -83,7 +82,7 @@ object ScalaDiscordVerificationService
 
                     privateChannel.sendFile(
                         stream.toByteArray(),
-                        "sccaptcha.png"
+                        "captcha.png"
                     ).queue()
                 }
         } catch (ignored: Exception)

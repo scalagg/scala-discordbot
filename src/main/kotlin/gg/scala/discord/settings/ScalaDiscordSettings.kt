@@ -11,9 +11,9 @@ import net.dv8tion.jda.api.entities.Role
  */
 class ScalaDiscordSettings(
     val token: String = "",
-    val guild: Long = 972886115667288095L,
+    val guild: Long = 988902759434686474L,
     val activities: List<ScalaDiscordActivity> = mutableListOf(
-        ScalaDiscordActivity(Activity.ActivityType.PLAYING, "glade.gg"),
+        ScalaDiscordActivity(Activity.ActivityType.PLAYING, "potpvp.com"),
         ScalaDiscordActivity(Activity.ActivityType.COMPETING, "a tournament"),
         ScalaDiscordActivity(Activity.ActivityType.WATCHING, "over the discord"),
     ),
