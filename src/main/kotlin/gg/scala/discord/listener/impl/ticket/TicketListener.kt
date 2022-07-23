@@ -5,6 +5,7 @@ import gg.scala.discord.ticketing.response.TicketResponseStages.stages
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageUpdateEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.util.concurrent.CompletableFuture
@@ -77,6 +78,36 @@ object TicketListener : ListenerAdapter()
             return
         }
 
+        val rawMessage = event.message.contentRaw
+
+        if (event.channel.name == "counting")
+        {
+            try
+            {
+                val integer = rawMessage.toInt()
+
+                event.channel.history.retrievePast(2)
+                    .map { messages -> if (messages.isEmpty()) "" else messages[1].contentRaw }
+                    .queue { message ->
+                        if (message.equals(""))
+                        {
+                            return@queue
+                        }
+
+                        val beforeNumber = message.toInt()
+
+                        if (beforeNumber + 1 != integer)
+                        {
+                            event.message.delete().queue()
+                        }
+                    }
+            } catch (ignored: Exception)
+            {
+                event.message.delete().queue()
+            }
+            return
+        }
+
         val ticket = Tickets
             .tickets[event.textChannel]
             ?: return
@@ -126,6 +157,14 @@ object TicketListener : ListenerAdapter()
                     ticket.sendStageMessage(stage)
                 }
             }
+        }
+    }
+
+    override fun onMessageUpdate(event: MessageUpdateEvent)
+    {
+        if (event.channel.name == "counting")
+        {
+            event.message.delete().queue()
         }
     }
 }

@@ -11,13 +11,11 @@ import net.dv8tion.jda.api.entities.Role
  */
 class ScalaDiscordSettings(
     val token: String = "",
-    val guild: Long = 988902759434686474L,
+    val guild: Long = 880621130233294919L,
     val activities: List<ScalaDiscordActivity> = mutableListOf(
-        ScalaDiscordActivity(Activity.ActivityType.PLAYING, "potpvp.com"),
-        ScalaDiscordActivity(Activity.ActivityType.COMPETING, "a tournament"),
-        ScalaDiscordActivity(Activity.ActivityType.WATCHING, "over the discord"),
+        ScalaDiscordActivity(Activity.ActivityType.WATCHING, "over the discord")
     ),
-    private val supportRoles: String = "Platform Admin,Head Admin,Admin,Senior Mod,Developer"
+    private val supportRoles: String = "Administrator"
 )
 {
     fun getSupportRoles(guild: Guild): List<Role>
