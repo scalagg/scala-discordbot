@@ -2,7 +2,6 @@ package gg.scala.discord.command.commands
 
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.interactions.commands.build.Commands.user
 import revxrsal.commands.annotation.Command
 import revxrsal.commands.annotation.Default
 import revxrsal.commands.annotation.Description
@@ -16,9 +15,6 @@ import revxrsal.commands.jda.core.BaseActorJDA
  * @author GrowlyX
  * @since 2/5/2022
  */
-@RolePermission(
-    names = ["Support Team"]
-)
 @Command("ticket")
 object TicketCommands
 {
@@ -34,6 +30,9 @@ object TicketCommands
         )
     }
 
+    @RolePermission(
+        names = ["Support Team"]
+    )
     @Subcommand("add")
     @Description("Add a user to the current ticket.")
     fun onAdd(actor: BaseActorJDA, member: Member)
@@ -57,6 +56,9 @@ object TicketCommands
             }
     }
 
+    @RolePermission(
+        names = ["Support Team"]
+    )
     @Subcommand("remove")
     @Description("Remove a user from the current ticket.")
     fun onRemove(actor: BaseActorJDA, member: Member)
