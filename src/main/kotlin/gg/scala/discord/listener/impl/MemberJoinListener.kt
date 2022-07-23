@@ -12,7 +12,8 @@ object MemberJoinListener : ListenerAdapter()
     override fun onGuildMemberJoin(event: GuildMemberJoinEvent)
     {
         val channel = event.guild
-            .getTextChannelsByName("arrivals", true)[0]!!
+            .getTextChannelsByName("arrivals", true)
+            .firstOrNull()
 
         val member = event.guild
             .getRolesByName("Default", true)
@@ -23,8 +24,8 @@ object MemberJoinListener : ListenerAdapter()
             event.member.guild.addRoleToMember(event.member, member).queue()
         }
 
-        channel.sendMessage(
+        channel?.sendMessage(
             "Welcome to the **PotPvP Network** Discord Server, " + event.member.asMention + "!"
-        ).queue()
+        )?.queue()
     }
 }

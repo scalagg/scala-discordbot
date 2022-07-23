@@ -1,7 +1,6 @@
-package gg.scala.discord.command
+package gg.scala.discord.command.commands
 
 import gg.scala.discord.embed
-import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import revxrsal.commands.annotation.Command
 import revxrsal.commands.jda.annotation.RolePermission
@@ -11,7 +10,7 @@ import revxrsal.commands.jda.core.BaseActorJDA
  * @author GrowlyX
  * @since 2/5/2022
  */
-object TicketPanelCommand
+object PanelCommands
 {
     @Command("verification-panel")
     @RolePermission(

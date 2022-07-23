@@ -1,5 +1,7 @@
 package gg.scala.discord.command
 
+import gg.scala.discord.command.commands.PanelCommands
+import gg.scala.discord.command.commands.TicketCommands
 import gg.scala.flavor.inject.Inject
 import gg.scala.flavor.service.Configure
 import gg.scala.flavor.service.Service
@@ -20,6 +22,7 @@ object ScalaDiscordCommandService
     fun configure()
     {
         val command = JDACommandHandler.create(jda, "-")
-        command.register(TicketPanelCommand)
+        command.register(PanelCommands)
+        command.register(TicketCommands)
     }
 }
