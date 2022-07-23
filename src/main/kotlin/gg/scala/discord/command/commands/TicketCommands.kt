@@ -29,6 +29,7 @@ object TicketCommands
             """
                 **Ticket Commands:**
                  `-ticket add`: Add a user to the current ticket.
+                 `-ticket remove`: Remove a user from the current ticket.
             """.trimIndent()
         )
     }
@@ -53,6 +54,28 @@ object TicketCommands
             .setAllow(Permission.MESSAGE_SEND)
             .queue {
                 actor.reply("Added user ${member.asMention} to this ticket!")
+            }
+    }
+
+    @Subcommand("remove")
+    @Description("Remove a user from the current ticket.")
+    fun onRemove(actor: BaseActorJDA, member: Member)
+    {
+        if (!actor.channel.name.startsWith("ticket"))
+        {
+            throw CommandErrorException("This is not a ticket channel.")
+        }
+
+        val channel = actor.guild
+            .getTextChannelById(actor.channel.id)
+            ?: throw CommandErrorException(
+                "This is not a valid channel."
+            )
+
+        channel.createPermissionOverride(member)
+            .setDeny(Permission.VIEW_CHANNEL)
+            .queue {
+                actor.reply("Removed user ${member.asMention} from this ticket.")
             }
     }
 }
