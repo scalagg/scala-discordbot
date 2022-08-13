@@ -2,9 +2,11 @@ package gg.scala.discord
 
 import com.google.gson.LongSerializationPolicy
 import gg.scala.aware.AwareBuilder
+import gg.scala.aware.AwareHub
 import gg.scala.aware.codec.codecs.JsonRedisCodec
 import gg.scala.aware.codec.codecs.interpretation.AwareMessageCodec
 import gg.scala.aware.message.AwareMessage
+import gg.scala.aware.uri.WrappedAwareUri
 import gg.scala.cache.uuid.ScalaStoreUuidCache
 import gg.scala.cache.uuid.impl.LocalUuidCacheTranslator
 import gg.scala.cache.uuid.impl.distribution.DistributedRedisUuidCacheTranslator
@@ -63,6 +65,12 @@ object ScalaDiscordApp
             ScalaDataStoreStandaloneImpl
 
         DataStoreObjectControllerCache.create<Ticket>()
+
+        AwareHub.configure(
+            WrappedAwareUri()
+        ) {
+            Serializers.gson
+        }
 
         val aware = AwareBuilder
             .of<AwareMessage>("discord")

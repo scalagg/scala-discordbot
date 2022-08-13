@@ -18,8 +18,6 @@ import kotlin.random.Random
 @Service
 object Tickets
 {
-    private val encoder = Base64.getEncoder()
-
     fun create(event: ButtonInteractionEvent): TextChannel?
     {
         val ticketName = "ticket-${
