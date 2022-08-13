@@ -1,5 +1,7 @@
 package gg.scala.discord.ticketing.response
 
+import gg.scala.cache.uuid.ScalaStoreUuidCache
+import gg.scala.cache.uuid.ScalaStoreUuidCacheHelper
 import gg.scala.discord.language.Languages
 import gg.scala.discord.ticketing.Ticket
 import gg.scala.discord.ticketing.context.TicketCreationContext
@@ -38,7 +40,10 @@ object TicketResponseStages
     val USERNAME = object : TicketResponseStage
     {
         override fun stageIdentifier() = "Username"
-        override fun acceptResponse(response: String) = true
+        override fun acceptResponse(response: String): Boolean
+        {
+            return ScalaStoreUuidCache.uniqueId(response) != null
+        }
 
         override fun formatTranslated(translated: String?) = translated!!
     }
@@ -73,7 +78,7 @@ object TicketResponseStages
         override fun formatTranslated(translated: String?) = translated!!
     }
 
-    private val orderedStages =
+    val orderedStages =
         linkedSetOf<TicketResponseStage>()
 
     private fun getOrderedStagesWithinContext(ticket: Ticket) =

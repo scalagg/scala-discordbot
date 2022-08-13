@@ -1,7 +1,11 @@
 package gg.scala.discord.listener.impl.ticket
 
+import gg.scala.discord.ticketing.Ticket
 import gg.scala.discord.ticketing.Tickets
 import gg.scala.discord.ticketing.response.TicketResponseStages.stages
+import gg.scala.store.controller.DataStoreObjectControllerCache
+import gg.scala.store.storage.type.DataStoreStorageType
+import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -17,14 +21,27 @@ import java.util.concurrent.TimeUnit
  */
 object TicketListener : ListenerAdapter()
 {
+    private fun loadAllTickets() = DataStoreObjectControllerCache
+        .findNotNull<Ticket>()
+        .loadAll(DataStoreStorageType.REDIS)
+        .join().values
+
+    override fun onChannelDelete(event: ChannelDeleteEvent)
+    {
+        val ticket = this.loadAllTickets()
+            .firstOrNull { it.textChannel.idLong == event.channel.idLong }
+            ?: return
+
+        ticket.delete().join()
+    }
+
     override fun onGuildMemberRemove(event: GuildMemberRemoveEvent)
     {
-        val ticket = Tickets.tickets.values
+        val ticket = this.loadAllTickets()
             .firstOrNull { it.creator == event.member }
             ?: return
 
         ticket.textChannel.delete().queue()
-        Tickets.tickets.remove(ticket.textChannel)
     }
 
     override fun onButtonInteraction(
@@ -48,8 +65,10 @@ object TicketListener : ListenerAdapter()
             }
         } else if (event.button.id == "close-ticket")
         {
-            val ticket = Tickets
-                .tickets[event.textChannel]
+            val ticket = this.loadAllTickets()
+                .firstOrNull {
+                    it.textChannel == event.textChannel
+                }
                 ?: return
 
             if (ticket.closing)
@@ -60,10 +79,7 @@ object TicketListener : ListenerAdapter()
             event.interaction.editButton(
                 Button.danger("close-ticket", "Closing ticket... (5 seconds)")
             ).queue {
-                event.textChannel.delete()
-                    .queueAfter(5L, TimeUnit.SECONDS) {
-                        Tickets.tickets.remove(event.textChannel)
-                    }
+                event.textChannel.delete().queueAfter(5L, TimeUnit.SECONDS)
             }
         }
     }
@@ -108,8 +124,8 @@ object TicketListener : ListenerAdapter()
             return
         }
 
-        val ticket = Tickets
-            .tickets[event.textChannel]
+        val ticket = this.loadAllTickets()
+            .firstOrNull { it.textChannel.idLong == event.channel.idLong }
             ?: return
 
         if (

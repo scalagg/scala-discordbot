@@ -3,6 +3,8 @@ package gg.scala.discord.ticketing
 import gg.scala.discord.embed
 import gg.scala.discord.role
 import gg.scala.flavor.service.Service
+import gg.scala.store.controller.DataStoreObjectControllerCache
+import gg.scala.store.storage.type.DataStoreStorageType
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import java.util.*
@@ -15,8 +17,6 @@ import kotlin.random.Random
 @Service
 object Tickets
 {
-    val tickets = mutableMapOf<TextChannel, Ticket>()
-
     private val encoder = Base64.getEncoder()
 
     fun create(event: ButtonInteractionEvent): TextChannel?
@@ -57,7 +57,8 @@ object Tickets
             .queue()
 
         val ticket = Ticket(
-            event.member!!,
+            UUID.randomUUID(),
+            event.member!!.idLong,
             textChannel.idLong,
             textChannel.guild.idLong
         )
@@ -73,7 +74,13 @@ object Tickets
             textChannel.sendMessage(event.member!!.user.asMention).queue()
         }
 
-        tickets[textChannel] = ticket
+        DataStoreObjectControllerCache
+            .findNotNull<Ticket>()
+            .save(
+                ticket, DataStoreStorageType.REDIS
+            )
+            .join()
+
         return textChannel
     }
 

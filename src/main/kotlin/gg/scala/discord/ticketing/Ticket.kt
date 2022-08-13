@@ -5,40 +5,62 @@ import gg.scala.discord.embed
 import gg.scala.discord.language.Language
 import gg.scala.discord.language.Languages
 import gg.scala.discord.language.impl.English
-import gg.scala.discord.role
-import gg.scala.discord.settings.ScalaDiscordSettings
 import gg.scala.discord.ticketing.context.TicketCreationContext
 import gg.scala.discord.ticketing.context.TicketCreationContexts
 import gg.scala.discord.ticketing.response.TicketResponse
 import gg.scala.discord.ticketing.response.TicketResponseStage
-import gg.scala.discord.ticketing.response.TicketResponseStages
+import gg.scala.discord.ticketing.response.TicketResponseStages.orderedStages
 import gg.scala.discord.ticketing.response.TicketResponseStages.stages
-import gg.scala.flavor.inject.Inject
+import gg.scala.store.controller.DataStoreObjectControllerCache
+import gg.scala.store.storage.storable.IDataStoreObject
+import gg.scala.store.storage.type.DataStoreStorageType
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.Emoji
-import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.interactions.components.buttons.Button
-import java.util.ArrayList
+import java.util.*
+import java.util.concurrent.CompletableFuture
 
 /**
  * @author GrowlyX
  * @since 2/5/2022
  */
 class Ticket(
-    val creator: Member,
+    override val identifier: UUID,
+    private val creatorId: Long,
     private val textChannelId: Long,
-    private val guildId: Long,
-)
+    private val guildId: Long
+) : IDataStoreObject
 {
     val textChannel: TextChannel
         get() = ScalaDiscordApp.client
             .getGuildById(guildId)!!
             .getTextChannelById(textChannelId)!!
 
+    val creator: Member
+        get() = ScalaDiscordApp.client
+            .getGuildById(guildId)!!
+            .getMemberById(this.creatorId)!!
+
+    data class WeakStageWrapper(
+        val stageId: String
+    )
+    {
+        fun get() = orderedStages
+            .first {
+                it.stageIdentifier() == this.stageId
+            }
+    }
+
     private val responses =
-        mutableMapOf<TicketResponseStage, TicketResponse>()
+        mutableMapOf<WeakStageWrapper, TicketResponse>()
+
+    fun findResponse(id: String) =
+        this.responses.entries
+            .firstOrNull {
+                it.key.stageId == id
+            }
+            ?.value
 
     var currentStage = -1
     var completedStagePrompt = false
@@ -107,7 +129,7 @@ class Ticket(
                 for (response in responses)
                 {
                     embedBuilder.addField(
-                        response.key.stageIdentifier(),
+                        response.key.get().stageIdentifier(),
                         response.value.content, true
                     )
                 }
@@ -129,19 +151,33 @@ class Ticket(
 
     fun language(): Language
     {
-        return responses[TicketResponseStages.LANGUAGE]
+        return this.findResponse("Language")
             ?.let { Languages.find(it.content) } ?: English
     }
 
     fun context(): TicketCreationContext
     {
-        return responses[TicketResponseStages.CONTEXT]
+        return this.findResponse("Category")
             ?.let { TicketCreationContexts.parse(it.content) }
             ?: TicketCreationContext.OTHER
     }
 
     fun addStageResponse(stage: TicketResponseStage, content: String)
     {
-        responses[stage] = TicketResponse(content)
+        this.responses[WeakStageWrapper(stage.stageIdentifier())] = TicketResponse(content)
+    }
+
+    fun delete(): CompletableFuture<Void>
+    {
+        return DataStoreObjectControllerCache
+            .findNotNull<Ticket>()
+            .delete(this.identifier, DataStoreStorageType.REDIS)
+    }
+
+    fun save(): CompletableFuture<Void>
+    {
+        return DataStoreObjectControllerCache
+            .findNotNull<Ticket>()
+            .save(this, DataStoreStorageType.REDIS)
     }
 }
