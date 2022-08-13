@@ -38,7 +38,7 @@ object TicketListener : ListenerAdapter()
     override fun onGuildMemberRemove(event: GuildMemberRemoveEvent)
     {
         val ticket = this.loadAllTickets()
-            .firstOrNull { it.creatorId == event.member?.idLong }
+            .firstOrNull { it.creatorId == event.member?.id }
             ?: return
 
         ticket.textChannel.delete().queue()
@@ -67,7 +67,7 @@ object TicketListener : ListenerAdapter()
         {
             val ticket = this.loadAllTickets()
                 .firstOrNull {
-                    it.textChannel == event.textChannel
+                    it.textChannelId == event.textChannel.idLong
                 }
                 ?: return
 
@@ -126,12 +126,12 @@ object TicketListener : ListenerAdapter()
         }
 
         val ticket = this.loadAllTickets()
-            .firstOrNull { it.textChannel.idLong == event.channel.idLong }
+            .firstOrNull { it.textChannelId == event.channel.idLong }
             ?: return
 
         if (
             event.member == null ||
-            event.member!!.idLong != ticket.creator.idLong
+            event.member!!.id != ticket.creatorId
         ) return
 
         if (!ticket.completedStagePrompt)
@@ -148,32 +148,38 @@ object TicketListener : ListenerAdapter()
             val stage = ticket
                 .stages()[ticket.currentStage]
 
-            CompletableFuture.supplyAsync {
-                stage.acceptResponse(content)
-            }.thenAccept { accepted ->
-                if (accepted)
-                {
-                    ticket.addStageResponse(
-                        stage, content
-                    )
-                    ticket.startNextStage()
-                } else
-                {
-                    if (ticket.currentStage == 0)
-                    {
-                        event.message.reply(
-                            "That's an invalid language, fallbacking to `English`."
-                        ).queue()
-
-                        ticket.startNextStage()
-                        return@thenAccept
-                    }
-
-                    event.message.reply(ticket.invalid()).queue()
-
-                    ticket.sendStageMessage(stage)
+            CompletableFuture
+                .supplyAsync {
+                    stage.acceptResponse(content)
                 }
-            }
+                .exceptionally {
+                    it.printStackTrace()
+                    return@exceptionally false
+                }
+                .thenAccept { accepted ->
+                    if (accepted)
+                    {
+                        ticket.addStageResponse(
+                            stage, content
+                        )
+                        ticket.startNextStage()
+                    } else
+                    {
+                        if (ticket.currentStage == 0)
+                        {
+                            event.message.reply(
+                                "That's an invalid language, fallbacking to `English`."
+                            ).queue()
+
+                            ticket.startNextStage()
+                            return@thenAccept
+                        }
+
+                        event.message.reply(ticket.invalid()).queue()
+
+                        ticket.sendStageMessage(stage)
+                    }
+                }
         }
     }
 

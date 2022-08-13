@@ -14,7 +14,7 @@ object PanelCommands
 {
     @Command("verification-panel")
     @RolePermission(
-        names = ["Developer"]
+        names = ["Developer", "Admin"]
     )
     fun onVerifyPanel(actor: BaseActorJDA)
     {
@@ -43,7 +43,7 @@ object PanelCommands
 
     @Command("ticket-panel")
     @RolePermission(
-        names = ["Developer"]
+        names = ["Developer", "Admin"]
     )
     fun onTicketPanel(actor: BaseActorJDA)
     {
@@ -68,7 +68,7 @@ object PanelCommands
 
     @Command("link-panel")
     @RolePermission(
-        names = ["Developer"]
+        names = ["Developer", "Admin"]
     )
     fun onSyncPanel(actor: BaseActorJDA)
     {

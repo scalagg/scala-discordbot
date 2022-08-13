@@ -42,6 +42,7 @@ dependencies {
 
     implementation "gg.scala.commons:serializers:2.0.0"
     implementation "gg.scala.commons:store:2.0.0"
+    implementation "com.squareup.okhttp:okhttp:2.7.5"
 
     implementation "io.lettuce:lettuce-core:6.1.8.RELEASE"
 

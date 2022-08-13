@@ -1,5 +1,6 @@
 package gg.scala.discord.listener.impl
 
+import gg.scala.discord.listener.ScalaDiscordListenerService
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
@@ -24,8 +25,10 @@ object MemberJoinListener : ListenerAdapter()
             event.member.guild.addRoleToMember(event.member, member).queue()
         }
 
-        channel?.sendMessage(
-            "Welcome to the **PotPvP Network** Discord Server, " + event.member.asMention + "!"
-        )?.queue()
+        ScalaDiscordListenerService.mappings[event.member.id] = event.member
+//
+//        channel?.sendMessage(
+//            "Welcome to the **PotPvP Network** Discord Server, " + event.member.asMention + "!"
+//        )?.queue()
     }
 }

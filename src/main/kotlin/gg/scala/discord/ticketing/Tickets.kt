@@ -26,7 +26,7 @@ object Tickets
 
         val existing = TicketListener.loadAllTickets()
             .any {
-                it.creatorId == event.member!!.idLong
+                it.creatorId == event.member!!.id
             }
 
         if (existing)
@@ -53,7 +53,7 @@ object Tickets
 
         val ticket = Ticket(
             UUID.randomUUID(),
-            event.member!!.idLong,
+            event.user.id,
             textChannel.idLong,
             textChannel.guild.idLong
         )
@@ -69,13 +69,7 @@ object Tickets
             textChannel.sendMessage(event.member!!.user.asMention).queue()
         }
 
-        DataStoreObjectControllerCache
-            .findNotNull<Ticket>()
-            .save(
-                ticket, DataStoreStorageType.REDIS
-            )
-            .join()
-
+        ticket.save().join()
         return textChannel
     }
 

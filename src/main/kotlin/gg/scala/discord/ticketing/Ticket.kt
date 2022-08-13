@@ -1,10 +1,12 @@
 package gg.scala.discord.ticketing
 
+import gg.scala.cache.uuid.ScalaStoreUuidCache
 import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.embed
 import gg.scala.discord.language.Language
 import gg.scala.discord.language.Languages
 import gg.scala.discord.language.impl.English
+import gg.scala.discord.listener.ScalaDiscordListenerService
 import gg.scala.discord.ticketing.context.TicketCreationContext
 import gg.scala.discord.ticketing.context.TicketCreationContexts
 import gg.scala.discord.ticketing.response.TicketResponse
@@ -15,7 +17,6 @@ import gg.scala.store.controller.DataStoreObjectControllerCache
 import gg.scala.store.storage.storable.IDataStoreObject
 import gg.scala.store.storage.type.DataStoreStorageType
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.util.*
@@ -27,7 +28,7 @@ import java.util.concurrent.CompletableFuture
  */
 class Ticket(
     override val identifier: UUID,
-    val creatorId: Long,
+    val creatorId: String,
     val textChannelId: Long,
     private val guildId: Long
 ) : IDataStoreObject
@@ -37,28 +38,18 @@ class Ticket(
             .getGuildById(guildId)!!
             .getTextChannelById(textChannelId)!!
 
-    val creator: Member
-        get() = ScalaDiscordApp.client
-            .getGuildById(guildId)!!
-            .getMemberById(this.creatorId)!!
-
-    data class WeakStageWrapper(
-        val stageId: String
-    )
-    {
-        fun get() = orderedStages
-            .first {
-                it.stageIdentifier() == this.stageId
-            }
-    }
+    fun get(stageId: String) = orderedStages
+        .first {
+            it.stageIdentifier() == stageId
+        }
 
     private val responses =
-        mutableMapOf<WeakStageWrapper, TicketResponse>()
+        mutableMapOf<String, TicketResponse>()
 
     fun findResponse(id: String) =
         this.responses.entries
             .firstOrNull {
-                it.key.stageId == id
+                it.key == id
             }
             ?.value
 
@@ -123,15 +114,24 @@ class Ticket(
 
                 manager.queue()
 
+                val member = ScalaDiscordListenerService.mappings[this.creatorId]
+                    ?: return@queue
+
                 val embedBuilder = embed(
                     "**Responses**",
-                    "Here are ${creator.asMention}'s responses:"
+                    "Here are ${member.asMention}'s responses:"
+                )
+
+                embedBuilder.setThumbnail(
+                    "https://crafatar.com/renders/body/${
+                        ScalaStoreUuidCache.uniqueId(this.responses["Username"]!!.content)
+                    }?overlay"
                 )
 
                 for (response in responses)
                 {
                     embedBuilder.addField(
-                        response.key.get().stageIdentifier(),
+                        get(response.key).stageIdentifier(),
                         response.value.content, true
                     )
                 }
@@ -142,7 +142,7 @@ class Ticket(
                     )
                     .queue { message ->
                         message.pin().queue {
-                            textChannel.sendMessage("${creator.asMention}, please wait patiently as a staff member responds to this ticket.").queue()
+                            textChannel.sendMessage("${member.asMention}, please wait patiently as a staff member responds to this ticket.").queue()
                         }
                     }
             }
@@ -166,7 +166,7 @@ class Ticket(
 
     fun addStageResponse(stage: TicketResponseStage, content: String)
     {
-        this.responses[WeakStageWrapper(stage.stageIdentifier())] = TicketResponse(content)
+        this.responses[stage.stageIdentifier()] = TicketResponse(content)
         this.save().join()
     }
 
