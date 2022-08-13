@@ -36,6 +36,14 @@ object ScalaDiscordApp
     private val flavor = Flavor
         .create<ScalaDiscordApp>()
 
+    val aware by lazy {
+        AwareBuilder
+            .of<AwareMessage>("discord")
+            .codec(AwareMessageCodec)
+            .logger(Logger.getAnonymousLogger())
+            .build()
+    }
+
     fun start()
     {
         Serializers.useGsonBuilderThenRebuild {
@@ -61,22 +69,16 @@ object ScalaDiscordApp
 
         client.awaitReady()
 
-        ScalaDataStoreShared.INSTANCE =
-            ScalaDataStoreStandaloneImpl
-
-        DataStoreObjectControllerCache.create<Ticket>()
-
         AwareHub.configure(
-            WrappedAwareUri()
+            WrappedAwareUri(address = settings.redisHost)
         ) {
             Serializers.gson
         }
 
-        val aware = AwareBuilder
-            .of<AwareMessage>("discord")
-            .codec(AwareMessageCodec)
-            .logger(Logger.getAnonymousLogger())
-            .build()
+        ScalaDataStoreShared.INSTANCE =
+            ScalaDataStoreStandaloneImpl
+
+        DataStoreObjectControllerCache.create<Ticket>()
 
         ScalaStoreUuidCache.configure(
             DistributedRedisUuidCacheTranslator(aware)

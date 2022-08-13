@@ -1,12 +1,12 @@
 package gg.scala.discord.store
 
+import gg.scala.discord.ScalaDiscordApp
 import gg.scala.store.ScalaDataStoreShared
 import gg.scala.store.connection.AbstractDataStoreConnection
 import gg.scala.store.connection.mongo.AbstractDataStoreMongoConnection
 import gg.scala.store.connection.mongo.impl.UriDataStoreMongoConnection
 import gg.scala.store.connection.mongo.impl.details.DataStoreMongoConnectionDetails
 import gg.scala.store.connection.redis.AbstractDataStoreRedisConnection
-import gg.scala.store.connection.redis.impl.DataStoreRedisConnection
 
 /**
  * @author GrowlyX
@@ -16,7 +16,10 @@ object ScalaDataStoreStandaloneImpl : ScalaDataStoreShared()
 {
     override fun getNewRedisConnection(): AbstractDataStoreRedisConnection
     {
-        return DataStoreRedisConnection()
+        return object : AbstractDataStoreRedisConnection()
+        {
+            override fun createNewConnection() = ScalaDiscordApp.aware
+        }
     }
 
     override fun getNewMongoConnection(): AbstractDataStoreMongoConnection
