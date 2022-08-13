@@ -75,6 +75,7 @@ object TicketListener : ListenerAdapter()
                 return
 
             ticket.closing = true
+            ticket.save().join()
 
             event.interaction.editButton(
                 Button.danger("close-ticket", "Closing ticket... (5 seconds)")

@@ -77,6 +77,7 @@ class Ticket(
                 stagesWithinContext[++currentStage]
 
             sendStageMessage(nextStage)
+            save().join()
         } catch (e: Exception)
         {
             completeStagePrompt()
@@ -102,6 +103,7 @@ class Ticket(
     private fun completeStagePrompt()
     {
         completedStagePrompt = true
+        save().join()
 
         textChannel.history
             .retrievePast(99)
@@ -165,6 +167,7 @@ class Ticket(
     fun addStageResponse(stage: TicketResponseStage, content: String)
     {
         this.responses[WeakStageWrapper(stage.stageIdentifier())] = TicketResponse(content)
+        this.save().join()
     }
 
     fun delete(): CompletableFuture<Void>
