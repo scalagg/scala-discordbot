@@ -19,7 +19,7 @@ object ScalaDiscordApp
 {
     lateinit var settings: ScalaDiscordSettings
 
-    private lateinit var client: JDA
+    lateinit var client: JDA
 
     private val flavor = Flavor
         .create<ScalaDiscordApp>()

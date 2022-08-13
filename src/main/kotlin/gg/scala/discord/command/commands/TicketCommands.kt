@@ -10,7 +10,6 @@ import revxrsal.commands.exception.CommandErrorException
 import revxrsal.commands.jda.annotation.RolePermission
 import revxrsal.commands.jda.core.BaseActorJDA
 
-
 /**
  * @author GrowlyX
  * @since 2/5/2022

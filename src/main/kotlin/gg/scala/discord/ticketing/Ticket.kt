@@ -28,9 +28,15 @@ import java.util.ArrayList
  */
 class Ticket(
     val creator: Member,
-    val textChannel: TextChannel
+    private val textChannelId: Long,
+    private val guildId: Long,
 )
 {
+    val textChannel: TextChannel
+        get() = ScalaDiscordApp.client
+            .getGuildById(guildId)!!
+            .getTextChannelById(textChannelId)!!
+
     private val responses =
         mutableMapOf<TicketResponseStage, TicketResponse>()
 

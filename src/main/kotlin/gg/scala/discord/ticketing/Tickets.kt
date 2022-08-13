@@ -18,7 +18,6 @@ object Tickets
     val tickets = mutableMapOf<TextChannel, Ticket>()
 
     private val encoder = Base64.getEncoder()
-    private val decoder = Base64.getDecoder()
 
     fun create(event: ButtonInteractionEvent): TextChannel?
     {
@@ -58,7 +57,9 @@ object Tickets
             .queue()
 
         val ticket = Ticket(
-            event.member!!, textChannel
+            event.member!!,
+            textChannel.idLong,
+            textChannel.guild.idLong
         )
 
         textChannel.sendMessageEmbeds(
