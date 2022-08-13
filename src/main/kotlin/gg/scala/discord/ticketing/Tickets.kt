@@ -1,6 +1,7 @@
 package gg.scala.discord.ticketing
 
 import gg.scala.discord.embed
+import gg.scala.discord.listener.impl.ticket.TicketListener
 import gg.scala.discord.role
 import gg.scala.flavor.service.Service
 import gg.scala.store.controller.DataStoreObjectControllerCache
@@ -25,17 +26,15 @@ object Tickets
             event.member!!.user.name
         }"
 
-        val memberId = encoder.encodeToString(
-            event.member!!.id.toByteArray()
-        )
+        val existing = TicketListener.loadAllTickets()
+            .any {
+                it.creatorId == event.member!!.idLong
+            }
 
-        if (
-            event.message.category!!.channels
-                .any {
-                    it.guild.getTextChannelById(it.idLong)
-                        ?.let { channel -> channel.topic == memberId } == true
-                }
-        ) return null
+        if (existing)
+        {
+            return null
+        }
 
         // TODO: use .queue()
         val textChannel = event.guild!!
@@ -43,8 +42,6 @@ object Tickets
                 ticketName, event.message.category
             )
             .complete()
-
-        textChannel.manager.setTopic(memberId).queue()
 
         textChannel.manager
             .putPermissionOverride(

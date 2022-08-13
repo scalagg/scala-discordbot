@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
  */
 object TicketListener : ListenerAdapter()
 {
-    private fun loadAllTickets() = DataStoreObjectControllerCache
+    fun loadAllTickets() = DataStoreObjectControllerCache
         .findNotNull<Ticket>()
         .loadAll(DataStoreStorageType.REDIS)
         .join().values

@@ -27,7 +27,7 @@ import java.util.concurrent.CompletableFuture
  */
 class Ticket(
     override val identifier: UUID,
-    private val creatorId: Long,
+    val creatorId: Long,
     private val textChannelId: Long,
     private val guildId: Long
 ) : IDataStoreObject
