@@ -29,7 +29,7 @@ object TicketListener : ListenerAdapter()
     override fun onChannelDelete(event: ChannelDeleteEvent)
     {
         val ticket = this.loadAllTickets()
-            .firstOrNull { it.textChannel.idLong == event.channel.idLong }
+            .firstOrNull { it.textChannelId == event.channel.idLong }
             ?: return
 
         ticket.delete().join()
@@ -38,7 +38,7 @@ object TicketListener : ListenerAdapter()
     override fun onGuildMemberRemove(event: GuildMemberRemoveEvent)
     {
         val ticket = this.loadAllTickets()
-            .firstOrNull { it.creator == event.member }
+            .firstOrNull { it.creatorId == event.member?.idLong }
             ?: return
 
         ticket.textChannel.delete().queue()
