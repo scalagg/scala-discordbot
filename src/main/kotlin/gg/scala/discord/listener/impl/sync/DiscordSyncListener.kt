@@ -35,7 +35,7 @@ object DiscordSyncListener : ListenerAdapter()
         if (event.message.author.isBot)
             return
 
-        if (event.privateChannel.user.idLong !in this.pendingSync)
+        if (event.privateChannel.user.idLong in this.pendingSync)
         {
             event.channel.sendMessage(
                 "Verifying your account..."
@@ -64,7 +64,7 @@ object DiscordSyncListener : ListenerAdapter()
                 }
 
                 val uniqueId = UUID.fromString(
-                    matching.second
+                    matching.first
                         .replace(
                             "discord-sync-codes:", ""
                         )
