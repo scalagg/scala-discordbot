@@ -1,5 +1,7 @@
 package gg.scala.discord.listener.impl.sync
 
+import gg.scala.aware.message.AwareMessage
+import gg.scala.aware.thread.AwareThreadContext
 import gg.scala.cache.uuid.ScalaStoreUuidCache
 import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.embed
@@ -18,7 +20,9 @@ import java.util.*
 object DiscordSyncListener : ListenerAdapter()
 {
     private val pendingSync = mutableListOf<Long>()
-    private val aware = ScalaDiscordApp.aware.internal().connect()
+
+    private val connection = ScalaDiscordApp
+        .aware.internal().connect()
 
     override fun onMessageReceived(
         event: MessageReceivedEvent
@@ -40,10 +44,10 @@ object DiscordSyncListener : ListenerAdapter()
             event.message
                 .reply("Verifying your account...")
                 .queue { message ->
-                    val matching = this.aware.sync()
+                    val matching = this.connection.sync()
                         .keys("discord-sync-codes:*")
                         .mapNotNull {
-                            val value = this.aware
+                            val value = this.connection
                                 .sync().get(it)
                                 ?: return@mapNotNull null
 
@@ -99,6 +103,17 @@ object DiscordSyncListener : ListenerAdapter()
                     discordProfile.lastCachedDiscordUsername =
                         "${privateMember.name}#${privateMember.discriminator}"
                     discordProfile.save().join()
+
+                    this.connection.sync().del(
+                        "discord-sync-codes:$uniqueId"
+                    )
+
+                    AwareMessage.of(
+                        "linked", ScalaDiscordApp.aware,
+                        "player-uuid" to uniqueId
+                    ).publish(
+                        AwareThreadContext.SYNC
+                    )
 
                     message.editMessage(
                         "We've successfully linked your Discord account to the Minecraft username: `${
