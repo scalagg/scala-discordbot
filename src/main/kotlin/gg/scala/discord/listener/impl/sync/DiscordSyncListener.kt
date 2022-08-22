@@ -39,6 +39,13 @@ object DiscordSyncListener : ListenerAdapter()
         if (event.message.author.isBot)
             return
 
+        val guildId = ScalaDiscordApp
+            .settings.guild
+
+        val guild = event.jda
+            .getGuildById(guildId)
+            ?: return
+
         if (event.privateChannel.user.idLong in this.pendingSync)
         {
             event.message
@@ -104,6 +111,14 @@ object DiscordSyncListener : ListenerAdapter()
                     ).publish(
                         AwareThreadContext.SYNC
                     )
+
+                    guild.addRoleToMember(
+                        privateMember.idLong, guild
+                            .getRolesByName(
+                                "Account Linked", true
+                            )
+                            .first()
+                    ).queue()
 
                     message.editMessage(
                         "We've successfully linked your Discord account to the Minecraft username: `${
