@@ -74,16 +74,6 @@ object DiscordSyncListener : ListenerAdapter()
                             )
                     )
 
-                    println(uniqueId)
-
-                    DataStoreObjectControllerCache
-                        .findNotNull<DiscordProfile>()
-                        .loadAll(DataStoreStorageType.MONGO)
-                        .join()
-                        .forEach {
-                            println(it)
-                        }
-
                     val discordProfile = DataStoreObjectControllerCache
                         .findNotNull<DiscordProfile>()
                         .load(uniqueId, DataStoreStorageType.MONGO)
