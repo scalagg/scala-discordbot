@@ -1,5 +1,6 @@
 package gg.scala.discord.listener.impl.sync
 
+import com.google.common.cache.CacheBuilder
 import gg.scala.aware.message.AwareMessage
 import gg.scala.aware.thread.AwareThreadContext
 import gg.scala.cache.uuid.ScalaStoreUuidCache
@@ -11,6 +12,7 @@ import gg.scala.store.storage.type.DataStoreStorageType
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import java.time.Duration
 import java.util.*
 
 /**
@@ -19,7 +21,9 @@ import java.util.*
  */
 object DiscordSyncListener : ListenerAdapter()
 {
-    private val pendingSync = mutableListOf<Long>()
+    private val pendingSync = CacheBuilder.newBuilder()
+        .expireAfterWrite(Duration.ofMinutes(10L))
+        .build<Long, Long>()
 
     private val connection = ScalaDiscordApp
         .aware.internal().connect()
@@ -46,7 +50,7 @@ object DiscordSyncListener : ListenerAdapter()
             .getGuildById(guildId)
             ?: return
 
-        if (event.privateChannel.user.idLong in this.pendingSync)
+        if (this.pendingSync.asMap().containsKey(event.privateChannel.user.idLong))
         {
             event.message
                 .reply("Verifying your account...")
@@ -124,7 +128,9 @@ object DiscordSyncListener : ListenerAdapter()
                         "We've successfully linked your Discord account to the Minecraft username: `${
                             ScalaStoreUuidCache.username(uniqueId)
                         }`!"
-                    ).queue()
+                    ).queue {
+                        this.pendingSync.invalidate(privateMember.idLong)
+                    }
                 }
         }
     }
@@ -135,7 +141,7 @@ object DiscordSyncListener : ListenerAdapter()
     {
         if (event.button.id == "discord-syncing" && event.member != null)
         {
-            if (this.pendingSync.contains(event.member!!.idLong))
+            if (this.pendingSync.asMap().containsKey(event.member!!.idLong))
             {
                 event.interaction.reply("We already sent you a message. Check your DMs!")
                     .setEphemeral(true)
@@ -154,7 +160,7 @@ object DiscordSyncListener : ListenerAdapter()
                 .queue { channel ->
                     if (channel != null)
                     {
-                        this.pendingSync.add(event.member!!.idLong)
+                        this.pendingSync.put(event.member!!.idLong, event.member!!.idLong)
 
                         channel.sendMessageEmbeds(
                             embed(
