@@ -37,63 +37,75 @@ object DiscordSyncListener : ListenerAdapter()
 
         if (event.privateChannel.user.idLong in this.pendingSync)
         {
-            event.channel.sendMessage(
-                "Verifying your account..."
-            ).queue { message ->
-                val matching = this.aware.sync()
-                    .keys("discord-sync-codes:*")
-                    .mapNotNull {
-                        val value = this.aware
-                            .sync().get(it)
-                            ?: return@mapNotNull null
+            event.message
+                .reply("Verifying your account...")
+                .queue { message ->
+                    val matching = this.aware.sync()
+                        .keys("discord-sync-codes:*")
+                        .mapNotNull {
+                            val value = this.aware
+                                .sync().get(it)
+                                ?: return@mapNotNull null
 
-                        it to value
+                            it to value
+                        }
+                        .find {
+                            it.second.equals(
+                                event.message.contentRaw, true
+                            )
+                        }
+
+                    if (matching == null)
+                    {
+                        message.editMessage(
+                            "We were unable to verify your account! Are you sure you enter the right code?"
+                        ).queue()
+                        return@queue
                     }
-                    .find {
-                        it.second.equals(
-                            event.message.contentRaw, true
-                        )
+
+                    val uniqueId = UUID.fromString(
+                        matching.first
+                            .replace(
+                                "discord-sync-codes:", ""
+                            )
+                    )
+
+                    println(uniqueId)
+
+                    DataStoreObjectControllerCache
+                        .findNotNull<DiscordProfile>()
+                        .loadAll(DataStoreStorageType.MONGO)
+                        .join()
+                        .forEach {
+                            println(it)
+                        }
+
+                    val discordProfile = DataStoreObjectControllerCache
+                        .findNotNull<DiscordProfile>()
+                        .load(uniqueId, DataStoreStorageType.MONGO)
+                        .join()
+
+                    if (discordProfile == null)
+                    {
+                        message.editMessage(
+                            "Something went terribly wrong while trying to process your request. Please report this to an administrator. (0x1)"
+                        ).queue()
+                        return@queue
                     }
 
-                if (matching == null)
-                {
+                    val privateMember = event.privateChannel.user
+
+                    discordProfile.discordId = privateMember.idLong
+                    discordProfile.lastCachedDiscordUsername =
+                        "${privateMember.name}#${privateMember.discriminator}"
+                    discordProfile.save().join()
+
                     message.editMessage(
-                        "We were unable to verify your account! Are you sure you enter the right code?"
+                        "We've successfully linked your Discord account to the Minecraft username: `${
+                            ScalaStoreUuidCache.username(uniqueId)
+                        }`!"
                     ).queue()
-                    return@queue
                 }
-
-                val uniqueId = UUID.fromString(
-                    matching.first
-                        .replace(
-                            "discord-sync-codes:", ""
-                        )
-                )
-
-                val discordProfile = DataStoreObjectControllerCache
-                    .findNotNull<DiscordProfile>()
-                    .load(uniqueId, DataStoreStorageType.MONGO)
-                    .join()
-
-                if (discordProfile == null)
-                {
-                    message.editMessage(
-                        "Something went terribly wrong while trying to process your request. Please report this to an administrator. (0x1)"
-                    ).queue()
-                    return@queue
-                }
-
-                discordProfile.discordId = event.member!!.idLong
-                discordProfile.lastCachedDiscordUsername =
-                    "${event.member!!.user.name}${event.member!!.user.discriminator}"
-                discordProfile.save().join()
-
-                message.editMessage(
-                    "We've successfully linked your Discord account to the Minecraft username: `${
-                        ScalaStoreUuidCache.username(uniqueId)
-                    }`!"
-                ).queue()
-            }
         }
     }
 
