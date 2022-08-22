@@ -66,7 +66,7 @@ object VerificationListener : ListenerAdapter()
             val player = guild.role("Member")!!
             guild.addRoleToMember(event.privateChannel.user.idLong, player).queue()
 
-            event.message.reply("You've been verified in the **Verio Network** Discord Server, have fun!")
+            event.message.reply("You've been verified in the **Minequest Network** Discord Server, have fun!")
                 .queue()
 
             ScalaDiscordVerificationService
