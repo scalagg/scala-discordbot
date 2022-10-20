@@ -15,7 +15,7 @@ object LargeContentListener : ListenerAdapter()
         if (event.message.contentRaw.length >= 1700 && event.member != null)
         {
             event.message.delete().queue()
-            event.guild.timeoutFor(event.member!!, Duration.ofDays(365)).queue()
+            event.guild.timeoutFor(event.member!!, Duration.ofDays(28)).queue()
 
             event.channel.sendMessage(
                 "${event.member!!.asMention} has been muted for `sending large messages`."
