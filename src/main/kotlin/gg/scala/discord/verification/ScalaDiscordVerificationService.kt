@@ -33,7 +33,7 @@ object ScalaDiscordVerificationService
     {
         if (
             member.roles.contains(
-                event.guild!!.role("Member")
+                event.guild!!.role("Player")
             )
         )
         {

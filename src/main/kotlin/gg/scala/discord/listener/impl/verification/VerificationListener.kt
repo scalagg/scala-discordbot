@@ -63,7 +63,7 @@ object VerificationListener : ListenerAdapter()
 
         if (captcha.isCorrect(event.message.contentRaw))
         {
-            val player = guild.role("Member")!!
+            val player = guild.role("Player")!!
             guild.addRoleToMember(event.privateChannel.user.idLong, player).queue()
 
             event.message.reply("You've been verified in the **Minequest Network** Discord Server, have fun!")

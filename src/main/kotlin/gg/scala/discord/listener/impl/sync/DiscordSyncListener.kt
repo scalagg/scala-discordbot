@@ -143,7 +143,8 @@ object DiscordSyncListener : ListenerAdapter()
         {
             if (this.pendingSync.asMap().containsKey(event.member!!.idLong))
             {
-                event.interaction.reply("We already sent you a message. Check your DMs!")
+                event.interaction
+                    .reply("We already sent you a message. Check your DMs!")
                     .setEphemeral(true)
                     .queue()
                 return
@@ -151,28 +152,37 @@ object DiscordSyncListener : ListenerAdapter()
 
             event.member!!.user
                 .openPrivateChannel()
-                .onErrorMap {
-                    event.interaction.reply("We were unable to send you a message. Are you sure you are allowing private messages from me?")
-                        .setEphemeral(true)
-                        .queue()
-                    return@onErrorMap null
-                }
                 .queue { channel ->
-                    if (channel != null)
-                    {
-                        this.pendingSync.put(event.member!!.idLong, event.member!!.idLong)
-
-                        channel.sendMessageEmbeds(
+                    channel
+                        .sendMessageEmbeds(
                             embed(
                                 "Enter your code",
-                                "Enter the 7 digit code you received in-game to completed the Minecraft verification process!"
+                                "Enter the 7 character code you received in-game to completed the Minecraft verification process!"
                             ).build()
-                        ).queue {
-                            event.interaction.reply("We sent you a message, check your DMs!")
+                        )
+                        .onErrorMap {
+                            event.interaction
+                                .reply("We were unable to send you a message. Are you sure you are allowing private messages from me?")
+                                .setEphemeral(true)
+                                .queue()
+                            return@onErrorMap null
+                        }
+                        .queue {
+                            if (it == null)
+                            {
+                                return@queue
+                            }
+
+                            this.pendingSync.put(
+                                event.member!!.idLong,
+                                event.member!!.idLong
+                            )
+
+                            event.interaction
+                                .reply("We sent you a message, check your DMs!")
                                 .setEphemeral(true)
                                 .queue()
                         }
-                    }
                 }
         }
     }
