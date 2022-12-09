@@ -74,10 +74,15 @@ object PanelCommands
     {
         val embed = embed(
             "\uD83D\uDD17 **Discord Link**",
-            "Interact with the button below to link your discord account!",
+            "Link your Minecraft and Discord account!",
             "",
-            "**INFO:**",
-            " - Our system may be slow at times, please contact an administrator if an issue occurs."
+            "**How do I link my account?**",
+            " - Log-in to our Minecraft server using `minequest.gg`.",
+            " - Run the `/link` command, and note down the alphanumeric code.",
+            " - Click the **Link your account** button below and paste your code in <@848959591475445781>'s direct messages.",
+            "",
+            "**Need help?**",
+            "Create a ticket in <#1008098345568448529> if you face any issues or have any questions during the linking process!"
         )
 
         actor.channel.sendMessageEmbeds(embed.build())

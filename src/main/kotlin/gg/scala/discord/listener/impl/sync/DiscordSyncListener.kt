@@ -119,7 +119,7 @@ object DiscordSyncListener : ListenerAdapter()
                     guild.addRoleToMember(
                         privateMember.idLong, guild
                             .getRolesByName(
-                                "Account Linked", true
+                                "✓ Account Linked", true
                             )
                             .first()
                     ).queue()
