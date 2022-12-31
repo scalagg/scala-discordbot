@@ -13,7 +13,7 @@ object MemberJoinListener : ListenerAdapter()
     override fun onGuildMemberJoin(event: GuildMemberJoinEvent)
     {
         val channel = event.guild
-            .getTextChannelsByName("arrivals", true)
+            .getTextChannelsByName("welcome", true)
             .firstOrNull()
 
         val member = event.guild
@@ -26,9 +26,9 @@ object MemberJoinListener : ListenerAdapter()
         }
 
         ScalaDiscordListenerService.mappings[event.member.id] = event.member
-//
-//        channel?.sendMessage(
-//            "Welcome to the **PotPvP Network** Discord Server, " + event.member.asMention + "!"
-//        )?.queue()
+
+        channel?.sendMessage(
+            "Welcome to the **Minequest Network** Discord Server, " + event.member.asMention + "!"
+        )?.queue()
     }
 }

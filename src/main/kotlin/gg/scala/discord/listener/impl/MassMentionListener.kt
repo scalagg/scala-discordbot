@@ -15,7 +15,7 @@ object MassMentionListener : ListenerAdapter()
         if (event.message.mentionedUsers.size >= 6)
         {
             event.message.delete().queue()
-            event.guild.timeoutFor(event.member!!, Duration.ofDays(365))
+            event.guild.timeoutFor(event.member!!, Duration.ofDays(28))
 
             event.channel.sendMessage(
                 "${event.member!!.asMention} has been muted for `pinging more than 6 users`."

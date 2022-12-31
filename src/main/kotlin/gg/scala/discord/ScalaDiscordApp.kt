@@ -26,6 +26,7 @@ import gg.scala.store.controller.DataStoreObjectControllerCache
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
+import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.evilblock.cubed.serializers.Serializers
 import java.io.File
 import java.lang.reflect.Type
@@ -66,13 +67,10 @@ object ScalaDiscordApp
 
         client = JDABuilder
             .createDefault(settings.token)
-            .enableIntents(
-                GatewayIntent.GUILD_BANS,
-                GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                GatewayIntent.GUILD_MEMBERS,
-                GatewayIntent.GUILD_MESSAGES,
-                GatewayIntent.DIRECT_MESSAGES
+            .setEnabledIntents(
+                GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS)
             )
+            .setMemberCachePolicy(MemberCachePolicy.ALL)
             .build()
 
         client.awaitReady()
