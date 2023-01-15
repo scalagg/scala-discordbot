@@ -1,5 +1,6 @@
 package gg.scala.discord.store
 
+import com.mongodb.MongoClient
 import gg.scala.discord.ScalaDiscordApp
 import gg.scala.store.ScalaDataStoreShared
 import gg.scala.store.connection.AbstractDataStoreConnection
@@ -25,7 +26,7 @@ object ScalaDataStoreStandaloneImpl : ScalaDataStoreShared()
     override fun getNewMongoConnection(): AbstractDataStoreMongoConnection
     {
         return UriDataStoreMongoConnection(
-            DataStoreMongoConnectionDetails()
+            DataStoreMongoConnectionDetails(), MongoClient("127.0.0.1", 27017)
         )
     }
 
@@ -33,4 +34,6 @@ object ScalaDataStoreStandaloneImpl : ScalaDataStoreShared()
     {
         AbstractDataStoreConnection.LOGGER.info("$from: $message")
     }
+
+    override fun forceDisableRedisThreshold() = true
 }

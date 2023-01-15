@@ -1,5 +1,6 @@
 package gg.scala.discord.command.commands
 
+import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.embed
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import revxrsal.commands.annotation.Command
@@ -77,13 +78,40 @@ object PanelCommands
             "Link your Minecraft and Discord account!",
             "",
             "**How do I link my account?**",
-            " - Log-in to our Minecraft server using `minequest.gg`.",
+            " - Log-in to our Minecraft server using `${ScalaDiscordApp.settings.serverAddress}`.",
             " - Run the `/link` command, and note down the alphanumeric code.",
             " - Click the **Link your account** button below and paste your code in <@848959591475445781>'s direct messages.",
             "",
             "**Need help?**",
             "Create a ticket in <#1008098345568448529> if you face any issues or have any questions during the linking process!"
         )
+
+        actor.channel.sendMessageEmbeds(embed.build())
+            .setActionRow(
+                Button.success(
+                    "discord-syncing", "Link your account"
+                )
+            )
+            .queue()
+    }
+
+    @Command("whitelist-token-panel")
+    @RolePermission(
+        names = ["Developer", "Owner"]
+    )
+    fun onClaimWhitelistToken(actor: BaseActorJDA)
+    {
+        val embed = embed(
+            "\uD83D\uDD17 **Claim Whitelist Tokens**",
+            "Claim your whitelist token for you, or another player!",
+            "",
+            "**How do I get whitelist tokens?**",
+            "Boost this discord server! Every individual boost gives you 1 additional whitelist token.",
+            "",
+            "**Need help?**",
+            "Create a ticket in <#1008098345568448529> if you face any issues or have any questions during the linking process!"
+        )
+
 
         actor.channel.sendMessageEmbeds(embed.build())
             .setActionRow(

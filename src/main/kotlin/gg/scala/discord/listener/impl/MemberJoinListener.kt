@@ -1,5 +1,6 @@
 package gg.scala.discord.listener.impl
 
+import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.listener.ScalaDiscordListenerService
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -28,7 +29,7 @@ object MemberJoinListener : ListenerAdapter()
         ScalaDiscordListenerService.mappings[event.member.id] = event.member
 
         channel?.sendMessage(
-            "Welcome to the **Minequest Network** Discord Server, " + event.member.asMention + "!"
+            "Welcome to the **${ScalaDiscordApp.settings.serverName} Network** Discord Server, " + event.member.asMention + "!"
         )?.queue()
     }
 }
