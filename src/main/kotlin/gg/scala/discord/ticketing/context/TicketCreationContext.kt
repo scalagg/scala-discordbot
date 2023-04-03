@@ -12,5 +12,6 @@ enum class TicketCreationContext(
     STORE_SUPPORT("Store Support"),
     REWARD_CLAIMING("Reward Claiming"),
     APPLICATION("Applications"),
+    BUG_REPORT("Bug Report"),
     OTHER("Other")
 }
