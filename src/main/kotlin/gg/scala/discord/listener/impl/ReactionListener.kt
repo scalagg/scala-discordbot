@@ -44,6 +44,7 @@ object ReactionListener : ListenerAdapter()
             .removeRoleFromMember(
                 member, role
             )
+            .queue()
     }
 
     override fun onMessageReactionAdd(
@@ -65,5 +66,6 @@ object ReactionListener : ListenerAdapter()
             .addRoleToMember(
                 member, role
             )
+            .queue()
     }
 }
