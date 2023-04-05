@@ -10,5 +10,11 @@ enum class ReactionMappings(
 {
     ServerUpdates(1093010045391876128L, "\uD83D\uDCDC"),
     StoreUpdates(1093010092242247732L, "\uD83D\uDCB5"),
-    Giveaways(1093010308978716682L, "\uD83C\uDF89")
+    Giveaways(1093010308978716682L, "\uD83C\uDF89");
+
+    companion object
+    {
+        @JvmStatic
+        val EMOJIS = values().associateBy(ReactionMappings::emoji)
+    }
 }
