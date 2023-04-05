@@ -56,19 +56,9 @@ object DiscordSyncListener : ListenerAdapter()
                 .reply("Verifying your account...")
                 .queue { message ->
                     val matching = this.connection.sync()
-                        .keys("discord-sync-codes:*")
-                        .mapNotNull {
-                            val value = this.connection
-                                .sync().get(it)
-                                ?: return@mapNotNull null
-
-                            it to value
-                        }
-                        .find {
-                            it.second.equals(
-                                event.message.contentRaw, true
-                            )
-                        }
+                        .get(
+                            "discord-sync-codes:codes:${event.message.contentRaw}"
+                        )
 
                     if (matching == null)
                     {
@@ -78,12 +68,7 @@ object DiscordSyncListener : ListenerAdapter()
                         return@queue
                     }
 
-                    val uniqueId = UUID.fromString(
-                        matching.first
-                            .replace(
-                                "discord-sync-codes:", ""
-                            )
-                    )
+                    val uniqueId = UUID.fromString(matching)
 
                     val discordProfile = DataStoreObjectControllerCache
                         .findNotNull<DiscordProfile>()
@@ -105,9 +90,10 @@ object DiscordSyncListener : ListenerAdapter()
                         "${privateMember.name}#${privateMember.discriminator}"
                     discordProfile.save().join()
 
-                    this.connection.sync().del(
-                        "discord-sync-codes:$uniqueId"
-                    )
+                    this.connection.sync().apply {
+                        del("discord-sync-codes:codes:${event.message.contentRaw}")
+                        del("discord-sync-codes:accounts:$uniqueId")
+                    }
 
                     AwareMessage.of(
                         "linked", ScalaDiscordApp.aware,
