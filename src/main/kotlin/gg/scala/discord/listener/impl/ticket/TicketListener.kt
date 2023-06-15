@@ -50,24 +50,26 @@ object TicketListener : ListenerAdapter()
     {
         if (event.button.id == "ticket-creation")
         {
-            val ticket = Tickets.create(event)
-
-            if (ticket != null)
-            {
-                event.interaction.reply("Your ticket was created, view it here: ${ticket.asMention}.")
-                    .setEphemeral(true)
-                    .queue()
-            } else
-            {
-                event.interaction.reply("You already have an open ticket.")
-                    .setEphemeral(true)
-                    .queue()
-            }
+            Tickets
+                .create(event)
+                .thenAccept { ticket ->
+                    if (ticket != null)
+                    {
+                        event.interaction.reply("Your ticket was created, view it here: ${ticket.asMention}.")
+                            .setEphemeral(true)
+                            .queue()
+                    } else
+                    {
+                        event.interaction.reply("You already have an open ticket.")
+                            .setEphemeral(true)
+                            .queue()
+                    }
+                }
         } else if (event.button.id == "close-ticket")
         {
             val ticket = this.loadAllTickets()
                 .firstOrNull {
-                    it.textChannelId == event.textChannel.idLong
+                    it.textChannelId == event.channel.idLong
                 }
                 ?: return
 
@@ -80,21 +82,15 @@ object TicketListener : ListenerAdapter()
             event.interaction.editButton(
                 Button.danger("close-ticket", "Closing ticket... (5 seconds)")
             ).queue {
-                event.textChannel.delete().queueAfter(5L, TimeUnit.SECONDS)
+                event.channel
+                    .delete()
+                    .queueAfter(5L, TimeUnit.SECONDS)
             }
         }
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent)
     {
-        try
-        {
-            event.textChannel
-        } catch (ignored: Exception)
-        {
-            return
-        }
-
         val rawMessage = event.message.contentRaw
 
         if (event.channel.name == "counting")

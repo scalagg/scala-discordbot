@@ -11,6 +11,7 @@ import gg.scala.flavor.service.Service
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import net.dv8tion.jda.api.utils.FileUpload
 import java.awt.Color
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
@@ -80,10 +81,15 @@ object ScalaDiscordVerificationService
                         captcha.image, "png", stream
                     )
 
-                    privateChannel.sendFile(
-                        stream.toByteArray(),
-                        "captcha.png"
-                    ).queue()
+                    privateChannel
+                        .sendFiles(
+                            FileUpload
+                                .fromData(
+                                    stream.toByteArray(),
+                                    "captcha.png"
+                                )
+                        )
+                        .queue()
                 }
         } catch (ignored: Exception)
         {

@@ -1,5 +1,6 @@
 package gg.scala.discord.listener.impl
 
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.time.Duration
@@ -12,7 +13,10 @@ object MassMentionListener : ListenerAdapter()
 {
     override fun onMessageReceived(event: MessageReceivedEvent)
     {
-        if (event.message.mentionedUsers.size >= 6)
+        val userMentions = event.message.mentions
+            .getMentions(Message.MentionType.USER)
+
+        if (userMentions.size >= 6)
         {
             event.message.delete().queue()
             event.guild.timeoutFor(event.member!!, Duration.ofDays(28))

@@ -1,15 +1,6 @@
 package gg.scala.discord
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonSerializationContext
-import com.google.gson.JsonSerializer
 import com.google.gson.LongSerializationPolicy
-import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonWriter
 import gg.scala.aware.AwareBuilder
 import gg.scala.aware.AwareHub
 import gg.scala.aware.codec.codecs.interpretation.AwareMessageCodec
@@ -29,7 +20,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.evilblock.cubed.serializers.Serializers
 import java.io.File
-import java.lang.reflect.Type
 import java.util.logging.Logger
 
 /**
@@ -73,8 +63,6 @@ object ScalaDiscordApp
             .setMemberCachePolicy(MemberCachePolicy.ALL)
             .build()
 
-        client.awaitReady()
-
         AwareHub.configure(
             WrappedAwareUri(address = settings.redisHost)
         ) {
@@ -94,6 +82,8 @@ object ScalaDiscordApp
         flavor.bind<ScalaDiscordSettings>() to settings
 
         flavor.startup()
+
+        client.awaitReady()
     }
 
     fun stop()

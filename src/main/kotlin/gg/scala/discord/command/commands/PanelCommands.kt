@@ -13,9 +13,9 @@ import revxrsal.commands.jda.core.BaseActorJDA
  */
 object PanelCommands
 {
-    @Command("verification-panel")
+    /*@Command("verification-panel")
     @RolePermission(
-        names = ["Developer", "Owner"]
+        names = ["Developer", "Owner", "Permissions"]
     )
     fun onVerifyPanel(actor: BaseActorJDA)
     {
@@ -44,7 +44,7 @@ object PanelCommands
 
     @Command("ticket-panel")
     @RolePermission(
-        names = ["Developer", "Owner"]
+        names = ["Developer", "Owner", "Permissions"]
     )
     fun onTicketPanel(actor: BaseActorJDA)
     {
@@ -69,7 +69,7 @@ object PanelCommands
 
     @Command("link-panel")
     @RolePermission(
-        names = ["Developer", "Owner"]
+        names = ["Developer", "Owner", "Permissions"]
     )
     fun onSyncPanel(actor: BaseActorJDA)
     {
@@ -80,10 +80,10 @@ object PanelCommands
             "**How do I link my account?**",
             " - Log-in to our Minecraft server using `${ScalaDiscordApp.settings.serverAddress}`.",
             " - Run the `/link` command, and note down the alphanumeric code.",
-            " - Click the **Link your account** button below and paste your code in <@848959591475445781>'s direct messages.",
+            " - Click the **Link your account** button below and paste your code in <@875396948432154704>'s direct messages.",
             "",
             "**Need help?**",
-            "Create a ticket in <#1008098345568448529> if you face any issues or have any questions during the linking process!"
+            "Create a ticket in <#1038867550706090136> if you face any issues or have any questions during the linking process!"
         )
 
         actor.channel.sendMessageEmbeds(embed.build())
@@ -95,7 +95,7 @@ object PanelCommands
             .queue()
     }
 
-    @Command("whitelist-token-panel")
+    @Command("whitelist-token-panel", "Permissions")
     @RolePermission(
         names = ["Developer", "Owner"]
     )
@@ -120,5 +120,5 @@ object PanelCommands
                 )
             )
             .queue()
-    }
+    }*/
 }

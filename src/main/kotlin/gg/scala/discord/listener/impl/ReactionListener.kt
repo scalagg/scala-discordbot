@@ -1,6 +1,7 @@
 package gg.scala.discord.listener.impl
 
 import gg.scala.discord.reaction.ReactionMappings
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent
@@ -14,12 +15,14 @@ object ReactionListener : ListenerAdapter()
 {
     override fun onMessageReceived(event: MessageReceivedEvent)
     {
-        if (event.message.channel.name == "roles")
+        if (event.message.channel.name == "server-roles")
         {
             ReactionMappings.values()
                 .forEach {
                     event.message
-                        .addReaction(it.emoji)
+                        .addReaction(
+                            Emoji.fromUnicode(it.emoji)
+                        )
                         .queue()
                 }
         }
@@ -29,8 +32,13 @@ object ReactionListener : ListenerAdapter()
         event: MessageReactionRemoveEvent
     )
     {
+        if (event.reaction.channel.name != "server-roles")
+        {
+            return
+        }
+
         val mapping = ReactionMappings
-            .EMOJIS[event.reactionEmote.emoji]
+            .EMOJIS[event.reaction.emoji.asUnicode().asReactionCode]
             ?: return
 
         val member = event.member
@@ -51,8 +59,13 @@ object ReactionListener : ListenerAdapter()
         event: MessageReactionAddEvent
     )
     {
+        if (event.reaction.channel.name != "server-roles")
+        {
+            return
+        }
+
         val mapping = ReactionMappings
-            .EMOJIS[event.reactionEmote.emoji]
+            .EMOJIS[event.emoji.asReactionCode]
             ?: return
 
         val member = event.member

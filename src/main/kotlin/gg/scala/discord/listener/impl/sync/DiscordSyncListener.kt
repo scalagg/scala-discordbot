@@ -9,6 +9,7 @@ import gg.scala.discord.embed
 import gg.scala.discord.profile.DiscordProfile
 import gg.scala.store.controller.DataStoreObjectControllerCache
 import gg.scala.store.storage.type.DataStoreStorageType
+import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -32,10 +33,7 @@ object DiscordSyncListener : ListenerAdapter()
         event: MessageReceivedEvent
     )
     {
-        try
-        {
-            event.privateChannel
-        } catch (ignored: Exception)
+        if (event.channelType != ChannelType.PRIVATE)
         {
             return
         }
@@ -50,7 +48,7 @@ object DiscordSyncListener : ListenerAdapter()
             .getGuildById(guildId)
             ?: return
 
-        if (this.pendingSync.asMap().containsKey(event.privateChannel.user.idLong))
+        if (this.pendingSync.asMap().containsKey(event.author.idLong))
         {
             event.message
                 .reply("Verifying your account...")
@@ -83,7 +81,7 @@ object DiscordSyncListener : ListenerAdapter()
                         return@queue
                     }
 
-                    val privateMember = event.privateChannel.user
+                    val privateMember = event.author
 
                     discordProfile.discordId = privateMember.idLong
                     discordProfile.lastCachedDiscordUsername =
@@ -102,13 +100,16 @@ object DiscordSyncListener : ListenerAdapter()
                         AwareThreadContext.SYNC
                     )
 
-                    guild.addRoleToMember(
-                        privateMember.idLong, guild
-                            .getRolesByName(
-                                "✓ Account Linked", true
-                            )
-                            .first()
-                    ).queue()
+                    guild
+                        .addRoleToMember(
+                            event.member!!,
+                            guild
+                                .getRolesByName(
+                                    "✓ Account Linked", true
+                                )
+                                .first()
+                        )
+                        .queue()
 
                     message.editMessage(
                         "We've successfully linked your Discord account to the Minecraft username: `${

@@ -3,6 +3,7 @@ package gg.scala.discord.listener.impl.verification
 import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.role
 import gg.scala.discord.verification.ScalaDiscordVerificationService
+import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -40,10 +41,7 @@ object VerificationListener : ListenerAdapter()
         event: MessageReceivedEvent
     )
     {
-        try
-        {
-            event.privateChannel
-        } catch (ignored: Exception)
+        if (event.channelType != ChannelType.PRIVATE)
         {
             return
         }
@@ -59,18 +57,18 @@ object VerificationListener : ListenerAdapter()
             ?: return
 
         val captcha = ScalaDiscordVerificationService
-            .registry[event.privateChannel.user.id] ?: return
+            .registry[event.author.id] ?: return
 
         if (captcha.isCorrect(event.message.contentRaw))
         {
-            val player = guild.role("Player")!!
-            guild.addRoleToMember(event.privateChannel.user.idLong, player).queue()
+            val player = guild.role("Member") ?: guild.role("Player")!!
+            guild.addRoleToMember(event.author, player).queue()
 
             event.message.reply("You've been verified in the **${ScalaDiscordApp.settings.serverName} Network** Discord Server, have fun!")
                 .queue()
 
             ScalaDiscordVerificationService
-                .registry.remove(event.privateChannel.user.id)
+                .registry.remove(event.author.id)
         } else
         {
             event.message.reply("That's not the correct code! Please try again.")

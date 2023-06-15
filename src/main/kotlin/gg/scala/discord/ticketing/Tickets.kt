@@ -2,13 +2,12 @@ package gg.scala.discord.ticketing
 
 import gg.scala.discord.embed
 import gg.scala.discord.listener.impl.ticket.TicketListener
-import gg.scala.discord.role
 import gg.scala.flavor.service.Service
-import gg.scala.store.controller.DataStoreObjectControllerCache
-import gg.scala.store.storage.type.DataStoreStorageType
-import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import java.util.*
+import java.util.concurrent.CompletableFuture
 import kotlin.random.Random
 
 /**
@@ -18,7 +17,7 @@ import kotlin.random.Random
 @Service
 object Tickets
 {
-    fun create(event: ButtonInteractionEvent): TextChannel?
+    fun create(event: ButtonInteractionEvent): CompletableFuture<TextChannel?>
     {
         val ticketName = "ticket-${
             event.member!!.user.name
@@ -31,46 +30,61 @@ object Tickets
 
         if (existing)
         {
-            return null
+            return CompletableFuture.completedFuture(null)
         }
 
-        // TODO: use .queue()
-        val textChannel = event.guild!!
+        val future = CompletableFuture<TextChannel?>()
+
+        event.guild!!
             .createTextChannel(
                 ticketName, event.message.category
             )
-            .complete()
+            .queue { textChannel ->
+                if (textChannel == null)
+                {
+                    future.complete(null)
+                    return@queue
+                }
 
-        textChannel.manager
-            .putPermissionOverride(
-                event.member!!, 3072L, 8192L
-            )
-            .putPermissionOverride(
-                textChannel.guild.role("@everyone")!!,
-                0L, 1024L
-            )
-            .queue()
+                textChannel.manager
+                    .putPermissionOverride(
+                        event.member!!,
+                        listOf(
+                            Permission.VIEW_CHANNEL,
+                            Permission.MESSAGE_HISTORY,
+                            Permission.MESSAGE_EMBED_LINKS,
+                            Permission.MESSAGE_ATTACH_FILES,
+                            Permission.MESSAGE_ADD_REACTION,
+                            Permission.MESSAGE_EXT_EMOJI
+                        ),
+                        listOf()
+                    )
+                    .reason("Add Ticket-Author to ticket")
+                    .queue()
 
-        val ticket = Ticket(
-            UUID.randomUUID(),
-            event.user.id,
-            textChannel.idLong,
-            textChannel.guild.idLong
-        )
+                val ticket = Ticket(
+                    UUID.randomUUID(),
+                    event.user.id,
+                    textChannel.idLong,
+                    textChannel.guild.idLong
+                )
 
-        textChannel.sendMessageEmbeds(
-            embed(
-                "Support Ticket",
-                "Thanks for contacting our support team! Please answer the questions provided below until one of our support members are available.",
-                "", "Opened by: ${event.member!!.asMention}"
-            ).build()
-        ).queue {
-            ticket.startNextStage()
-            textChannel.sendMessage(event.member!!.user.asMention).queue()
-        }
+                textChannel.sendMessageEmbeds(
+                    embed(
+                        "Support Ticket",
+                        "Thanks for contacting our support team! Please answer the questions provided below until one of our support members are available.",
+                        "", "Opened by: ${event.member!!.asMention}"
+                    ).build()
+                ).queue {
+                    ticket.startNextStage()
+                    textChannel.sendMessage(event.member!!.user.asMention).queue()
+                }
 
-        ticket.save().join()
-        return textChannel
+                ticket.save().join()
+                future.complete(textChannel)
+            }
+
+        return future
     }
 
     private const val SALT = "abcdefghijklmnopqrstuvwxyz1234567890"

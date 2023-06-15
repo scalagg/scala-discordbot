@@ -6,7 +6,6 @@ import gg.scala.discord.embed
 import gg.scala.discord.language.Language
 import gg.scala.discord.language.Languages
 import gg.scala.discord.language.impl.English
-import gg.scala.discord.listener.ScalaDiscordListenerService
 import gg.scala.discord.ticketing.context.TicketCreationContext
 import gg.scala.discord.ticketing.context.TicketCreationContexts
 import gg.scala.discord.ticketing.response.TicketResponse
@@ -17,7 +16,7 @@ import gg.scala.store.controller.DataStoreObjectControllerCache
 import gg.scala.store.storage.storable.IDataStoreObject
 import gg.scala.store.storage.type.DataStoreStorageType
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -114,12 +113,8 @@ class Ticket(
 
                 manager.queue()
 
-                val member = ScalaDiscordListenerService.mappings[this.creatorId]
-                    ?: return@queue
-
                 val embedBuilder = embed(
-                    "**Responses**",
-                    "Here are ${member.asMention}'s responses:"
+                    "**Responses**"
                 )
 
                 embedBuilder.setThumbnail(
@@ -142,7 +137,7 @@ class Ticket(
                     )
                     .queue { message ->
                         message.pin().queue {
-                            textChannel.sendMessage("${member.asMention}, please wait patiently as a staff member responds to this ticket.").queue()
+                            textChannel.sendMessage("Please wait patiently as a staff member responds to this ticket.").queue()
                         }
                     }
             }

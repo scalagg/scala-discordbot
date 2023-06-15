@@ -21,8 +21,8 @@ object ScalaDiscordCommandService
     @Configure
     fun configure()
     {
-        val command = JDACommandHandler.create(jda, "-")
+        /*val command = JDACommandHandler.create(jda, "-")
         command.register(PanelCommands)
-        command.register(TicketCommands)
+        command.register(TicketCommands)*/
     }
 }

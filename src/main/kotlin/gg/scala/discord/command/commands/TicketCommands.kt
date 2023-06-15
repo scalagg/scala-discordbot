@@ -17,7 +17,7 @@ import revxrsal.commands.jda.core.BaseActorJDA
 @Command("ticket")
 object TicketCommands
 {
-    @Default
+   /* @Default
     fun onDefault(actor: BaseActorJDA)
     {
         actor.reply(
@@ -78,5 +78,5 @@ object TicketCommands
             .queue {
                 actor.reply("Removed user ${member.asMention} from this ticket.")
             }
-    }
+    }*/
 }

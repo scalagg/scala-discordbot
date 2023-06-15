@@ -24,8 +24,6 @@ object ScalaDiscordListenerService
     @Inject
     lateinit var jda: JDA
 
-    val mappings = mutableMapOf<String, Member>()
-
     @Configure
     fun configure()
     {
@@ -40,10 +38,5 @@ object ScalaDiscordListenerService
         ).forEach {
             jda.addEventListener(it)
         }
-
-        jda.getGuildById(ScalaDiscordApp.settings.guild)!!
-            .loadMembers {
-                this.mappings[it.id] = it
-            }
     }
 }

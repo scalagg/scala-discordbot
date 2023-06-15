@@ -1,14 +1,9 @@
 package gg.scala.discord.listener.impl
 
 import gg.scala.discord.ScalaDiscordApp
-import gg.scala.discord.listener.ScalaDiscordListenerService
-import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.CompletableFuture
-import java.util.function.BiConsumer
-import java.util.function.Supplier
-
 
 /**
  * @author GrowlyX
@@ -37,8 +32,6 @@ object MemberJoinListener : ListenerAdapter()
         {
             event.member.guild.addRoleToMember(event.member, member).queue()
         }
-
-        ScalaDiscordListenerService.mappings[event.member.id] = event.member
 
         channel?.sendMessage(
             "Welcome to the **${ScalaDiscordApp.settings.serverName} Network** Discord Server, " + event.member.asMention + "!"

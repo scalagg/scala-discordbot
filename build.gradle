@@ -2,8 +2,8 @@ plugins {
     id "application"
     id "maven-publish"
     id "com.jfrog.artifactory" version "4.29.2"
-    id "org.jetbrains.kotlin.jvm" version "1.7.20"
-    id "org.jetbrains.kotlin.kapt" version "1.7.20"
+    id "org.jetbrains.kotlin.jvm" version "1.8.21"
+    id "org.jetbrains.kotlin.kapt" version "1.8.21"
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
@@ -24,21 +24,25 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.21"
 
     // jda
-    implementation fileTree("libraries")
+    implementation("net.dv8tion:JDA:5.0.0-beta.10")
 
     // lamp
-    implementation "com.github.Revxrsal.Lamp:common:3.1.0"
-    implementation "com.github.Revxrsal.Lamp:jda:3.1.0"
-    implementation "com.github.Revxrsal.Lamp:cli:3.1.0"
+    implementation "com.github.Revxrsal.Lamp:common:3.1.5"
+    implementation "com.github.Revxrsal.Lamp:jda:3.1.5"
+    implementation "com.github.Revxrsal.Lamp:cli:3.1.5"
+    implementation("org.reflections:reflections:0.10.2")
+
 
     // scala
     implementation "gg.scala.flavor:flavor:0.1.6"
 
     implementation "gg.scala.commons:serializers:2.0.0"
     implementation "gg.scala.commons:store:2.0.0"
+    implementation "gg.scala.commons:velocity:3.2.1"
+
     implementation "com.squareup.okhttp:okhttp:2.7.5"
 
     implementation "io.lettuce:lettuce-core:6.2.1.RELEASE"
