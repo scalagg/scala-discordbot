@@ -30,11 +30,11 @@ dependencies {
     implementation("net.dv8tion:JDA:5.0.0-beta.10")
 
     // lamp
-    implementation "com.github.Revxrsal.Lamp:common:3.1.5"
-    implementation "com.github.Revxrsal.Lamp:jda:3.1.5"
-    implementation "com.github.Revxrsal.Lamp:cli:3.1.5"
-    implementation("org.reflections:reflections:0.10.2")
+    implementation "com.github.Revxrsal.Lamp:common:1521253789"
+    implementation "com.github.Revxrsal.Lamp:jda:1521253789"
+    implementation "com.github.Revxrsal.Lamp:cli:1521253789"
 
+    implementation("org.reflections:reflections:0.10.2")
 
     // scala
     implementation "gg.scala.flavor:flavor:0.1.6"

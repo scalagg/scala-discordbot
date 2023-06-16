@@ -13,7 +13,7 @@ import revxrsal.commands.jda.core.BaseActorJDA
  */
 object PanelCommands
 {
-    /*@Command("verification-panel")
+    @Command("verification-panel")
     @RolePermission(
         names = ["Developer", "Owner", "Permissions"]
     )
@@ -120,5 +120,5 @@ object PanelCommands
                 )
             )
             .queue()
-    }*/
+    }
 }

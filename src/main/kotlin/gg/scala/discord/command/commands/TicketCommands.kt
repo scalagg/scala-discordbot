@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import revxrsal.commands.annotation.Command
 import revxrsal.commands.annotation.Default
+import revxrsal.commands.annotation.DefaultFor
 import revxrsal.commands.annotation.Description
 import revxrsal.commands.annotation.Subcommand
 import revxrsal.commands.exception.CommandErrorException
@@ -17,7 +18,7 @@ import revxrsal.commands.jda.core.BaseActorJDA
 @Command("ticket")
 object TicketCommands
 {
-   /* @Default
+    @DefaultFor("ticket")
     fun onDefault(actor: BaseActorJDA)
     {
         actor.reply(
@@ -47,9 +48,12 @@ object TicketCommands
                 "This is not a valid channel."
             )
 
-        channel.createPermissionOverride(member)
-            .setAllow(Permission.VIEW_CHANNEL)
-            .setAllow(Permission.MESSAGE_SEND)
+        channel.manager
+            .putPermissionOverride(
+                member,
+                listOf(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND),
+                listOf()
+            )
             .queue {
                 actor.reply("Added user ${member.asMention} to this ticket!")
             }
@@ -73,10 +77,10 @@ object TicketCommands
                 "This is not a valid channel."
             )
 
-        channel.createPermissionOverride(member)
-            .setDeny(Permission.VIEW_CHANNEL)
+        channel.manager
+            .removePermissionOverride(member)
             .queue {
                 actor.reply("Removed user ${member.asMention} from this ticket.")
             }
-    }*/
+    }
 }
