@@ -84,8 +84,7 @@ object DiscordSyncListener : ListenerAdapter()
                     val privateMember = event.author
 
                     discordProfile.discordId = privateMember.idLong
-                    discordProfile.lastCachedDiscordUsername =
-                        "${privateMember.name}#${privateMember.discriminator}"
+                    discordProfile.lastCachedDiscordUsername = privateMember.name
                     discordProfile.save().join()
 
                     this.connection.sync().apply {
@@ -154,10 +153,10 @@ object DiscordSyncListener : ListenerAdapter()
                                 .queue()
                             return@onErrorMap null
                         }
-                        .queue {
+                        .queue contextual@{
                             if (it == null)
                             {
-                                return@queue
+                                return@contextual
                             }
 
                             this.pendingSync.put(
