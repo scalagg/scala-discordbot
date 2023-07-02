@@ -102,17 +102,6 @@ class Ticket(
                     message.delete().queue()
                 }
 
-                val manager = textChannel.manager
-
-                for (supportRole in ScalaDiscordApp.settings.getSupportRoles(textChannel.guild))
-                {
-                    manager.putPermissionOverride(
-                        supportRole, listOf(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), listOf()
-                    )
-                }
-
-                manager.queue()
-
                 val embedBuilder = embed(
                     "**Responses**"
                 )

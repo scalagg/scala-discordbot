@@ -47,8 +47,8 @@ object Tickets
                 }
 
                 textChannel.manager
-                    .putPermissionOverride(
-                        event.member!!,
+                    .putMemberPermissionOverride(
+                        event.member!!.idLong,
                         listOf(
                             Permission.VIEW_CHANNEL,
                             Permission.MESSAGE_HISTORY,
