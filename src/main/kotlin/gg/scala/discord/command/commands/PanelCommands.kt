@@ -49,8 +49,8 @@ object PanelCommands
     fun onTebexSync(actor: BaseActorJDA)
     {
         val embed = embed(
-            "**Beta Whitelist Roles**",
-            "If you have a purchased a Server Whitelist on our webstore, interact with the button below and follow the instructions in your direct messages to receive the <@&1128555815700287600> and gain access to **private channels** and **exclusive sneak peeks**."
+            "**Early Access Program**",
+            "If you have a purchased an Early Access bundle on our webstore, interact with the button below and follow the instructions in your direct messages to receive the <@&1128555815700287600> role and gain access to **private channels**, **exclusive sneak peeks**, and more."
         )
 
         actor.channel.sendMessageEmbeds(embed.build())

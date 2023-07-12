@@ -26,13 +26,13 @@ object TebexSyncListener : ListenerAdapter()
         if (event.button.id == "tebexsync")
         {
             val betaWhitelist = event.guild!!
-                .getRolesByName("Beta Whitelisted", true)
+                .getRolesByName("Early Access", true)
                 .first()
 
             if (event.member!!.roles.any { it.id == betaWhitelist.id })
             {
                 event
-                    .reply("You're already BETA whitelisted. There is no need for you to confirm your whitelist transaction.")
+                    .reply("You're already part of the Early Access program. There is no need for you to confirm your transaction.")
                     .setEphemeral(true)
                     .queue()
                 return
@@ -41,7 +41,7 @@ object TebexSyncListener : ListenerAdapter()
             if (event.member!!.id in tebexSync)
             {
                 event
-                    .reply("You're already in the process of receiving your BETA role. Make sure you are allowing direct messages from our Discord bot and try again.")
+                    .reply("You're already in the process of receiving your Early Access role. Make sure you are allowing direct messages from our Discord bot and try again.")
                     .setEphemeral(true)
                     .queue()
 
@@ -62,8 +62,8 @@ object TebexSyncListener : ListenerAdapter()
             }
 
             val embed = embed(
-                "Beta Whitelist Role",
-                "Enter your Tropic store transaction ID to receive your Beta Whitelisted role."
+                "Early Access Program",
+                "Enter your Tropic store transaction ID to join our Early Access program."
             )
 
             try
@@ -122,7 +122,7 @@ object TebexSyncListener : ListenerAdapter()
             .reply("Processing your transaction, please wait...")
             .queue {
                 val betaWhitelist = guild
-                    .getRolesByName("Beta Whitelisted", true)
+                    .getRolesByName("Early Access", true)
                     .first()
 
                 data class Package(val id: Int, val name: String)
@@ -154,12 +154,12 @@ object TebexSyncListener : ListenerAdapter()
                     return@queue
                 }
 
-                if (response.packages.none { pkg -> pkg.name == "Server Whitelist" })
+                if (response.packages.none { pkg -> (pkg.name == "Basic Bundle" || pkg.name == "Premium Bundle") })
                 {
                     tebexSync.remove(event.author.id)
                     it
                         .editMessage(
-                            "Sorry, but your purchase does not include a Server Whitelist."
+                            "Sorry, but your purchase does not include an invitation to the Early Access program."
                         )
                         .queue()
                     return@queue
@@ -167,7 +167,7 @@ object TebexSyncListener : ListenerAdapter()
 
                 it
                     .editMessage(
-                        "**Your purchase contains a Beta whitelist.** You should be able to log on the server using the address `tropic.gg`. You will be receiving the `Beta Whitelisted` in our Discord server shortly."
+                        "**Your purchase contains an Early Access program invitation.** You should be able to log on the server using the address `tropic.gg`. You will be receiving the `Early Access` role in our Discord server shortly."
                     )
                     .queue()
 
