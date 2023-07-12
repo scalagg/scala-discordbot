@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Role
  */
 class ScalaDiscordSettings(
     val token: String = "",
+    val tebexApiKey: String = "",
     val redisHost: String = "127.0.0.1",
     val serverName: String = "Minequest",
     val serverAddress: String = "minequest.gg",

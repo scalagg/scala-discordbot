@@ -99,14 +99,24 @@ object DiscordSyncListener : ListenerAdapter()
                         AwareThreadContext.SYNC
                     )
 
+                    val member = guild
+                        .getMember(event.message.author)
+                        ?: return@queue
+
                     guild
                         .addRoleToMember(
-                            event.member!!,
+                            member,
                             guild
                                 .getRolesByName(
                                     "✓ Account Linked", true
                                 )
                                 .first()
+                        )
+                        .queue()
+
+                    member
+                        .modifyNickname(
+                            ScalaStoreUuidCache.username(uniqueId)
                         )
                         .queue()
 

@@ -36,6 +36,7 @@ dependencies {
 
     implementation("org.reflections:reflections:0.10.2")
 
+    implementation 'com.konghq:unirest-java:3.11.09:standalone'
     // scala
     implementation "gg.scala.flavor:flavor:0.1.6"
 

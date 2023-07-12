@@ -42,6 +42,27 @@ object PanelCommands
             .queue()
     }
 
+    @Command("tebexsync-panel")
+    @RolePermission(
+        names = ["Developer", "Owner", "Permissions"]
+    )
+    fun onTebexSync(actor: BaseActorJDA)
+    {
+        val embed = embed(
+            "**Beta Whitelist Roles**",
+            "If you have a purchased a Server Whitelist on our webstore, interact with the button below and follow the instructions in your direct messages to receive the <@&1128555815700287600> and gain access to **private channels** and **exclusive sneak peeks**."
+        )
+
+        actor.channel.sendMessageEmbeds(embed.build())
+            .setActionRow(
+                Button.success(
+                    "tebexsync",
+                    "Receive Discord Roles"
+                )
+            )
+            .queue()
+    }
+
     @Command("ticket-panel")
     @RolePermission(
         names = ["Developer", "Owner", "Permissions"]
