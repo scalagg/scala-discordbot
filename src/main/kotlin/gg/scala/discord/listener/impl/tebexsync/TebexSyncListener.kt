@@ -111,8 +111,6 @@ object TebexSyncListener : ListenerAdapter()
             .getGuildById(guildId)
             ?: return
 
-        println(tebexSync)
-
         if (tebexSync.none { it == event.author.id })
         {
             return
