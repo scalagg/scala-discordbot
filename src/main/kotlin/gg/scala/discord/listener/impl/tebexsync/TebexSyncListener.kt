@@ -152,7 +152,7 @@ object TebexSyncListener : ListenerAdapter()
                     return@queue
                 }
 
-                if (response.packages.none { pkg -> (pkg.name == "Basic Bundle" || pkg.name == "Premium Bundle") })
+                if (response.packages.none { pkg -> (pkg.name == "Basic Bundle" || pkg.name == "Premium Bundle" || pkg.name == "Buddy Bundle") })
                 {
                     tebexSync.remove(event.author.id)
                     it
