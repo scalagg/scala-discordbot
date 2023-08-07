@@ -64,7 +64,7 @@ object ScalaDiscordApp
             .build()
 
         AwareHub.configure(
-            WrappedAwareUri(address = settings.redisHost)
+            WrappedAwareUri(address = settings.redisHost, port = settings.redisPort)
         ) {
             Serializers.gson
         }

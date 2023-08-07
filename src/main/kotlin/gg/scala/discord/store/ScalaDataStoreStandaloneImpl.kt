@@ -26,7 +26,10 @@ object ScalaDataStoreStandaloneImpl : ScalaDataStoreShared()
     override fun getNewMongoConnection(): AbstractDataStoreMongoConnection
     {
         return UriDataStoreMongoConnection(
-            DataStoreMongoConnectionDetails(), MongoClient("127.0.0.1", 27017)
+            DataStoreMongoConnectionDetails(
+                database = ScalaDiscordApp.settings.mongoCollection
+            ),
+            MongoClient("127.0.0.1", 27017)
         )
     }
 
