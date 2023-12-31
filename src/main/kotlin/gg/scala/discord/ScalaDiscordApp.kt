@@ -12,6 +12,7 @@ import gg.scala.cache.uuid.resolver.impl.MojangDataResolver
 import gg.scala.discord.settings.ScalaDiscordSettings
 import gg.scala.discord.store.ScalaDataStoreStandaloneImpl
 import gg.scala.discord.ticketing.Ticket
+import gg.scala.discord.ticketing.response.extended.models.Punishment
 import gg.scala.flavor.Flavor
 import gg.scala.store.ScalaDataStoreShared
 import gg.scala.store.controller.DataStoreObjectControllerCache
@@ -96,6 +97,7 @@ object ScalaDiscordApp
             ScalaDataStoreStandaloneImpl
 
         DataStoreObjectControllerCache.create<Ticket>()
+        DataStoreObjectControllerCache.create<Punishment>()
 
         ScalaStoreUuidCache.configure(
             DistributedRedisUuidCacheTranslator(aware),

@@ -120,15 +120,31 @@ class Ticket(
                     )
                 }
 
-                textChannel.sendMessageEmbeds(embedBuilder.build())
-                    .setActionRow(
-                        Button.danger("close-ticket", "Click to close")
-                    )
-                    .queue { message ->
-                        message.pin().queue {
-                            textChannel.sendMessage("Please wait patiently as a staff member responds to this ticket.").queue()
+                textChannel.sendMessageEmbeds(
+                    embedBuilder.build(),
+                    *stages()
+                        .map { stage ->
+                            if (responses.containsKey(stage.stageIdentifier()))
+                            {
+                                return@map stage.sendOptionalEmbed(
+                                    responses[stage.stageIdentifier()]!!.content
+                                )?.build()
+                            }
+
+                            return@map null
                         }
+                        .filterNotNull()
+                        .toTypedArray()
+                ).setActionRow(
+                    Button.danger("close-ticket", "Click to close")
+                ).queue { message ->
+
+
+                    message.pin().queue {
+                        textChannel.sendMessage("Please wait patiently as a staff member responds to this ticket.")
+                            .queue()
                     }
+                }
             }
     }
 
