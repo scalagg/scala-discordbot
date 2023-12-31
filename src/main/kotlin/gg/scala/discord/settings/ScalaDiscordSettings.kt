@@ -18,6 +18,7 @@ class ScalaDiscordSettings(
     val serverName: String = "Minequest",
     val serverAddress: String = "minequest.gg",
     val guild: Long = 644729311282069524L,
+    val sendLoginMessages: Boolean = true,
     val activities: List<ScalaDiscordActivity> = mutableListOf(
         ScalaDiscordActivity(Activity.ActivityType.WATCHING, "over the discord")
     ),

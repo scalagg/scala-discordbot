@@ -8,6 +8,7 @@ import gg.scala.aware.message.AwareMessage
 import gg.scala.aware.uri.WrappedAwareUri
 import gg.scala.cache.uuid.ScalaStoreUuidCache
 import gg.scala.cache.uuid.impl.distribution.DistributedRedisUuidCacheTranslator
+import gg.scala.cache.uuid.resolver.impl.MojangDataResolver
 import gg.scala.discord.settings.ScalaDiscordSettings
 import gg.scala.discord.store.ScalaDataStoreStandaloneImpl
 import gg.scala.discord.ticketing.Ticket
@@ -97,7 +98,8 @@ object ScalaDiscordApp
         DataStoreObjectControllerCache.create<Ticket>()
 
         ScalaStoreUuidCache.configure(
-            DistributedRedisUuidCacheTranslator(aware)
+            DistributedRedisUuidCacheTranslator(aware),
+            MojangDataResolver
         )
 
         flavor.bind<JDA>() to client

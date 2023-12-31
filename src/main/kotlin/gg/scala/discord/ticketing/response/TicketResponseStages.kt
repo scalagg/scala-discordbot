@@ -1,7 +1,6 @@
 package gg.scala.discord.ticketing.response
 
 import gg.scala.cache.uuid.ScalaStoreUuidCache
-import gg.scala.cache.uuid.ScalaStoreUuidCacheHelper
 import gg.scala.discord.language.Languages
 import gg.scala.discord.ticketing.Ticket
 import gg.scala.discord.ticketing.context.TicketCreationContext

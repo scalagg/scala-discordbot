@@ -33,9 +33,12 @@ object MemberJoinListener : ListenerAdapter()
             event.member.guild.addRoleToMember(event.member, member).queue()
         }
 
-        channel?.sendMessage(
-            "Welcome to the **${ScalaDiscordApp.settings.serverName} Network** Discord Server, " + event.member.asMention + "!"
-        )?.queue()
+        if (ScalaDiscordApp.settings.sendLoginMessages)
+        {
+            channel?.sendMessage(
+                "Welcome to the **${ScalaDiscordApp.settings.serverName} Network** Discord Server, " + event.member.asMention + "!"
+            )?.queue()
+        }
 
         CompletableFuture
             .supplyAsync {

@@ -1,5 +1,6 @@
 package gg.scala.discord.ticketing
 
+import gg.scala.discord.ScalaDiscordApp
 import gg.scala.discord.embed
 import gg.scala.discord.listener.impl.ticket.TicketListener
 import gg.scala.flavor.service.Service
@@ -39,28 +40,31 @@ object Tickets
             .createTextChannel(
                 ticketName, event.message.category
             )
+            .addPermissionOverride(event.member!!, listOf(
+                Permission.VIEW_CHANNEL,
+                Permission.MESSAGE_HISTORY,
+                Permission.MESSAGE_EMBED_LINKS,
+                Permission.MESSAGE_ATTACH_FILES,
+                Permission.MESSAGE_ADD_REACTION,
+                Permission.MESSAGE_EXT_EMOJI
+            ), listOf())
+            .addRolePermissionOverride(
+                event.guild!!.getRolesByName("@everyone", true).first().idLong,
+                listOf(),
+                listOf(Permission.VIEW_CHANNEL)
+            )
+            .apply {
+                ScalaDiscordApp.settings.getSupportRoles(event.guild!!)
+                    .forEach {
+                        addRolePermissionOverride(it.idLong, listOf(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), listOf())
+                    }
+            }
             .queue { textChannel ->
                 if (textChannel == null)
                 {
                     future.complete(null)
                     return@queue
                 }
-
-                textChannel.manager
-                    .putMemberPermissionOverride(
-                        event.member!!.idLong,
-                        listOf(
-                            Permission.VIEW_CHANNEL,
-                            Permission.MESSAGE_HISTORY,
-                            Permission.MESSAGE_EMBED_LINKS,
-                            Permission.MESSAGE_ATTACH_FILES,
-                            Permission.MESSAGE_ADD_REACTION,
-                            Permission.MESSAGE_EXT_EMOJI
-                        ),
-                        listOf()
-                    )
-                    .reason("Add Ticket-Author to ticket")
-                    .queue()
 
                 val ticket = Ticket(
                     UUID.randomUUID(),
