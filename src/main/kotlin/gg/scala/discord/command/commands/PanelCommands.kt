@@ -28,8 +28,8 @@ object PanelCommands
             "Interact with the button below to verify yourself!",
             "",
             "**INFO:**",
-            " - Not receiving a message? Make sure you have private messages enabled!",
-            " - Have any other questions? Create a ticket in <#${channel?.id}>!"
+            "- Not receiving a message? Make sure you have private messages enabled!",
+            "- Have any other questions? Create a ticket in <#${channel?.id}>!"
         )
 
         actor.channel.sendMessageEmbeds(embed.build())
@@ -74,8 +74,8 @@ object PanelCommands
             "Interact with the button below to create a support ticket!",
             "",
             "**INFO:**",
-            " - Please wait patiently as one of our staff members respond.",
-            " - Please respond to all questions (staff members will not respond to the ticket unless they are complete)!"
+            "- Please wait patiently as one of our staff members respond.",
+            "- Please respond to all questions (staff members will not respond to the ticket unless they are complete)!"
         )
 
         actor.channel.sendMessageEmbeds(embed.build())
@@ -99,12 +99,12 @@ object PanelCommands
             "Link your Minecraft and Discord account!",
             "",
             "**How do I link my account?**",
-            " - Log-in to our Minecraft server using `${ScalaDiscordApp.settings.serverAddress}`.",
-            " - Run the `/link` command, and note down the alphanumeric code.",
-            " - Click the **Link your account** button below and paste your code in <@875396948432154704>'s direct messages.",
+            "- Log-in to our Minecraft server using `${ScalaDiscordApp.settings.serverAddress}`.",
+            "- Run the `/link` command, and note down the alphanumeric code.",
+            "- Click the **Link your account** button below and paste your code in <@${ScalaDiscordApp.client.selfUser.id}>'s direct messages.",
             "",
             "**Need help?**",
-            "Create a ticket in <#1038867550706090136> if you face any issues or have any questions during the linking process!"
+            "Create a ticket if you face any issues or have any questions during the linking process!"
         )
 
         actor.channel.sendMessageEmbeds(embed.build())
@@ -130,7 +130,7 @@ object PanelCommands
             "Boost this discord server! Every individual boost gives you 1 additional whitelist token.",
             "",
             "**Need help?**",
-            "Create a ticket in <#1008098345568448529> if you face any issues or have any questions during the linking process!"
+            "Create a ticket if you face any issues or have any questions during the linking process!"
         )
 
 

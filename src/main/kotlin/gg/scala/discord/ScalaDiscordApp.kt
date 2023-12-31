@@ -46,14 +46,36 @@ object ScalaDiscordApp
     fun start()
     {
         Serializers.useGsonBuilderThenRebuild {
+            it.setPrettyPrinting()
             it.setLongSerializationPolicy(LongSerializationPolicy.STRING)
         }
 
-        settings = Serializers.gson.fromJson(
-            File("settings.json")
-                .bufferedReader(),
-            ScalaDiscordSettings::class.java
-        )
+        val settingsFile = File("settings.json")
+
+        if (!settingsFile.exists())
+        {
+            val newSettings = ScalaDiscordSettings()
+            settingsFile.createNewFile()
+            settingsFile.writeText(
+                Serializers.gson.toJson(newSettings)
+            )
+
+            this.settings = newSettings
+            Logger.getAnonymousLogger().info("A new settings object has been created in ${settingsFile.absolutePath}.")
+        } else
+        {
+            settings = Serializers.gson.fromJson(
+                File("settings.json")
+                    .bufferedReader(),
+                ScalaDiscordSettings::class.java
+            )
+        }
+
+        if (settings.token.isBlank())
+        {
+            Logger.getAnonymousLogger().info("Your token is empty! Stopping process.")
+            return
+        }
 
         client = JDABuilder
             .createDefault(settings.token)
