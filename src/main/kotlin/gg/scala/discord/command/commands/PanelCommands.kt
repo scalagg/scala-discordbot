@@ -101,7 +101,7 @@ object PanelCommands
             "**How do I link my account?**",
             "- Log-in to our Minecraft server using `${ScalaDiscordApp.settings.serverAddress}`.",
             "- Run the `/link` command, and note down the alphanumeric code.",
-            "- Click the **Link your account** button below and paste your code in <@${ScalaDiscordApp.client.selfUser.id}>'s direct messages.",
+            "- Click the **Link your account** button below and paste your code in the modal.",
             "",
             "**Need help?**",
             "Create a ticket if you face any issues or have any questions during the linking process!"

@@ -1,125 +1,44 @@
 package gg.scala.discord.listener.impl.tebexsync
 
 import gg.scala.discord.ScalaDiscordApp
-import gg.scala.discord.embed
-import kong.unirest.JsonNode
+import gg.scala.discord.listener.modal.ButtonActivatedModal
 import kong.unirest.Unirest
-import net.dv8tion.jda.api.entities.channel.ChannelType
-import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent
-import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent
+import net.dv8tion.jda.api.interactions.components.ActionRow
+import net.dv8tion.jda.api.interactions.components.text.TextInput
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle
+import net.dv8tion.jda.api.interactions.modals.Modal
 import net.evilblock.cubed.serializers.Serializers
 
 /**
  * @author GrowlyX
  * @since 2/6/2022
  */
-object TebexSyncListener : ListenerAdapter()
+object TebexSyncListener : ButtonActivatedModal(id = "tebexsync")
 {
-    private val tebexSync = mutableListOf<String>()
-
-    override fun onButtonInteraction(
-        event: ButtonInteractionEvent
-    )
-    {
-        if (event.button.id == "tebexsync")
-        {
-            val betaWhitelist = event.guild!!
-                .getRolesByName("Early Access", true)
-                .first()
-
-            if (event.member!!.roles.any { it.id == betaWhitelist.id })
-            {
-                event
-                    .reply("You're already part of the Early Access program. There is no need for you to confirm your transaction.")
-                    .setEphemeral(true)
-                    .queue()
-                return
-            }
-
-            if (event.member!!.id in tebexSync)
-            {
-                event
-                    .reply("You're already in the process of receiving your Early Access role. Make sure you are allowing direct messages from our Discord bot and try again.")
-                    .setEphemeral(true)
-                    .queue()
-
-                tebexSync.remove(event.member!!.id)
-                return
-            }
-
-            val privateChannel = try
-            {
-                event.member!!.user.openPrivateChannel()
-                    .complete()
-            } catch (ignored: Exception)
-            {
-                event.reply("We were unable to send you a private message! Are you allowing private messages?")
-                    .setEphemeral(true)
-                    .queue()
-                return
-            }
-
-            val embed = embed(
-                "Early Access Program",
-                "Enter your Tropic store transaction ID to join our Early Access program."
+    override fun modal() = Modal
+        .create(
+            "tebexsync", "Claim Early Access"
+        )
+        .addComponents(
+            ActionRow.of(
+                TextInput
+                    .create(
+                        "transactionid",
+                        "Transaction ID",
+                        TextInputStyle.SHORT
+                    )
+                    .setPlaceholder("Your Tebex transaction ID.")
+                    .build()
             )
+        )
+        .build()
 
-            try
-            {
-                privateChannel.sendMessageEmbeds(embed.build()).queue()
-            } catch (ignored: Exception)
-            {
-                event.reply("We were unable to send you a private message! Are you allowing private messages?")
-                    .setEphemeral(true).queue()
-                return
-            }
-
-            event.reply("We sent you a message, check your private messages!")
-                .setEphemeral(true).queue()
-            tebexSync.add(event.member!!.id)
-        }
-    }
-
-    override fun onGuildMemberRemove(
-        event: GuildMemberRemoveEvent
-    )
+    override fun onSubmit(event: ModalInteractionEvent)
     {
-        if (event.member == null)
-            return
-
-        this.tebexSync.remove(event.member!!.id)
-    }
-
-    override fun onMessageReceived(
-        event: MessageReceivedEvent
-    )
-    {
-        if (event.channelType != ChannelType.PRIVATE)
-        {
-            return
-        }
-
-        if (event.message.author.isBot)
-            return
-
-        val guildId = ScalaDiscordApp
-            .settings.guild
-
-        val guild = event.jda
-            .getGuildById(guildId)
-            ?: return
-
-        if (tebexSync.none { it == event.author.id })
-        {
-            return
-        }
-
-        event.message
-            .reply("Processing your transaction, please wait...")
+        event.deferReply(true)
             .queue {
-                val betaWhitelist = guild
+                val betaWhitelist = event.guild!!
                     .getRolesByName("Early Access", true)
                     .first()
 
@@ -133,7 +52,7 @@ object TebexSyncListener : ListenerAdapter()
                 val response = Serializers
                     .gson
                     .fromJson(
-                        Unirest.get("https://plugin.tebex.io/payments/${event.message.contentStripped}")
+                        Unirest.get("https://plugin.tebex.io/payments/${event.getValue("transactionid")!!.asString}")
                             .header("accept", "application/json")
                             .header("X-Tebex-Secret", ScalaDiscordApp.settings.tebexApiKey)
                             .asString()
@@ -143,9 +62,8 @@ object TebexSyncListener : ListenerAdapter()
 
                 if (response.status != "Complete")
                 {
-                    tebexSync.remove(event.author.id)
-                    it
-                        .editMessage(
+                    event.hook
+                        .sendMessage(
                             "We have received your purchase, however, it is still being processed. Please try again later!"
                         )
                         .queue()
@@ -154,24 +72,23 @@ object TebexSyncListener : ListenerAdapter()
 
                 if (response.packages.none { pkg -> (pkg.name == "Basic Bundle" || pkg.name == "Premium Bundle" || pkg.name == "Buddy Bundle") })
                 {
-                    tebexSync.remove(event.author.id)
-                    it
-                        .editMessage(
+                    event.hook
+                        .sendMessage(
                             "Sorry, but your purchase does not include an invitation to the Early Access program."
                         )
                         .queue()
                     return@queue
                 }
 
-                it
-                    .editMessage(
+                event.hook
+                    .sendMessage(
                         "**Your purchase contains an Early Access program invitation.** You should be able to log on the server using the address `tropic.gg`. You will be receiving the `Early Access` role in our Discord server shortly."
                     )
                     .queue()
 
-                guild
+                event.guild!!
                     .addRoleToMember(
-                        event.author,
+                        event.user,
                         betaWhitelist
                     )
                     .queue()
