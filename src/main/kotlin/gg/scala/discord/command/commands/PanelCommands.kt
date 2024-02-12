@@ -110,7 +110,7 @@ object PanelCommands
         actor.channel.sendMessageEmbeds(embed.build())
             .setActionRow(
                 Button.success(
-                    "discord-syncing", "Link your account"
+                    "discordsync", "Link your account"
                 )
             )
             .queue()
@@ -137,7 +137,7 @@ object PanelCommands
         actor.channel.sendMessageEmbeds(embed.build())
             .setActionRow(
                 Button.success(
-                    "discord-syncing", "Link your account"
+                    "whitelist-token", "Link your account"
                 )
             )
             .queue()

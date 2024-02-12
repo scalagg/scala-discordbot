@@ -1,6 +1,7 @@
 package gg.scala.discord.store
 
 import com.mongodb.MongoClient
+import com.mongodb.MongoClientURI
 import gg.scala.discord.ScalaDiscordApp
 import gg.scala.store.ScalaDataStoreShared
 import gg.scala.store.connection.AbstractDataStoreConnection
@@ -29,7 +30,7 @@ object ScalaDataStoreStandaloneImpl : ScalaDataStoreShared()
             DataStoreMongoConnectionDetails(
                 database = ScalaDiscordApp.settings.mongoCollection
             ),
-            MongoClient("127.0.0.1", 27017)
+            MongoClient(MongoClientURI(ScalaDiscordApp.settings.mongoURI))
         )
     }
 
