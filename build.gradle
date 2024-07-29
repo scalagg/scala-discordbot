@@ -2,8 +2,8 @@ plugins {
     id "application"
     id "maven-publish"
     id "com.jfrog.artifactory" version "4.29.2"
-    id "org.jetbrains.kotlin.jvm" version "1.8.21"
-    id "org.jetbrains.kotlin.kapt" version "1.8.21"
+    id "org.jetbrains.kotlin.jvm" version "1.9.20"
+    id "org.jetbrains.kotlin.kapt" version "1.9.20"
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
@@ -27,30 +27,32 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.21"
 
     // jda
-    implementation("net.dv8tion:JDA:5.0.0-beta.18")
+// https://mvnrepository.com/artifact/net.dv8tion/JDA
+    implementation("net.dv8tion:JDA:5.0.0-beta.24")
+
 
     // lamp
-    implementation "com.github.Revxrsal.Lamp:common:1521253789"
-    implementation "com.github.Revxrsal.Lamp:jda:1521253789"
-    implementation "com.github.Revxrsal.Lamp:cli:1521253789"
+    implementation "com.github.Revxrsal.Lamp:common:3.2.1"
+    implementation "com.github.Revxrsal.Lamp:jda:3.2.1"
+    implementation "com.github.Revxrsal.Lamp:cli:3.2.1"
 
     implementation("org.reflections:reflections:0.10.2")
-
     implementation 'com.konghq:unirest-java:3.11.09:standalone'
     // scala
     implementation "gg.scala.flavor:flavor:0.1.6"
 
-    implementation "gg.scala.commons:serializers:3.4.1"
-    implementation "gg.scala.commons:store:3.4.1"
-    implementation "gg.scala.commons:velocity:3.4.1"
+    implementation "gg.scala.commons:serializers:3.5.2"
+    implementation "gg.scala.commons:store:3.5.2"
+    implementation "gg.scala.commons:velocity:3.5.2"
 
     implementation "com.squareup.okhttp:okhttp:2.7.5"
-
     implementation "io.lettuce:lettuce-core:6.2.1.RELEASE"
 
-    implementation "gg.scala.store:shared:0.1.5"
+    implementation "gg.scala.store:shared:0.2.0"
     implementation "gg.scala.aware:aware:1.2.1"
-    implementation "org.mongodb:mongodb-driver:3.12.11"
+
+// https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-legacy
+    implementation("org.mongodb:mongodb-driver-legacy:5.1.1")
 
     // captcha
     implementation "com.lamergameryt:lamercaptcha:1.0.0"

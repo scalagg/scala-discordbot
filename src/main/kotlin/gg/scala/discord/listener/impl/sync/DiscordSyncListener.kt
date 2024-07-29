@@ -64,7 +64,7 @@ object DiscordSyncListener : ButtonActivatedModal(id = "discordsync")
         {
             event.hook.sendMessage(
                 "Something went terribly wrong while trying to process your request. Please report this to an administrator. (0x1)"
-            ).queue()
+            ).setEphemeral(true).queue()
             return
         }
 
@@ -107,6 +107,6 @@ object DiscordSyncListener : ButtonActivatedModal(id = "discordsync")
             "We've successfully linked your Discord account to the Minecraft username: `${
                 ScalaStoreUuidCache.username(uniqueId)
             }`!"
-        ).queue()
+        ).setEphemeral(true).queue()
     }
 }
