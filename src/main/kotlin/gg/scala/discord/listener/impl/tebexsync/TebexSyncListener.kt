@@ -82,7 +82,7 @@ object TebexSyncListener : ButtonActivatedModal(id = "tebexsync")
 
                 event.hook
                     .sendMessage(
-                        "**Your purchase contains an Early Access program invitation.** You should be able to log on the server using the address `tropic.gg`. You will be receiving the `Early Access` role in our Discord server shortly."
+                        "**Your purchase contains an Early Access program invitation.** You should be able to log on the server using the address `scala.gg`. You will be receiving the `Early Access` role in our Discord server shortly."
                     )
                     .queue()
 

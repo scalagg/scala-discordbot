@@ -21,7 +21,7 @@ object MemberJoinListener : ListenerAdapter()
     override fun onGuildMemberJoin(event: GuildMemberJoinEvent)
     {
         val channel = event.guild
-            .getTextChannelsByName("welcome", true)
+            .getTextChannelsByName("arrivals", true)
             .firstOrNull()
 
         val member = event.guild
@@ -49,7 +49,7 @@ object MemberJoinListener : ListenerAdapter()
                 {
                     val memberLogChannel = event.guild
                         .getTextChannelsByName(
-                            "members-reached", true
+                            "system-logs", true
                         )[0]
 
                     memberLogChannel

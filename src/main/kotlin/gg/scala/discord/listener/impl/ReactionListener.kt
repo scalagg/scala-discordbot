@@ -20,7 +20,7 @@ object ReactionListener : ListenerAdapter()
 {
     override fun onMessageReceived(event: MessageReceivedEvent)
     {
-        if (event.message.channel.name == "server-roles")
+        if (event.message.channel.name == "✨┃server-roles")
         {
             ReactionMappings.values()
                 .forEach {
@@ -37,7 +37,7 @@ object ReactionListener : ListenerAdapter()
         event: MessageReactionRemoveEvent
     )
     {
-        if (event.reaction.channel.name != "server-roles")
+        if (event.reaction.channel.name != "✨┃server-roles")
         {
             return
         }
@@ -169,7 +169,7 @@ object ReactionListener : ListenerAdapter()
         event: MessageReactionAddEvent
     )
     {
-        if (event.reaction.channel.name != "server-roles")
+        if (event.reaction.channel.name != "✨┃server-roles")
         {
             return
         }

@@ -5,7 +5,8 @@ import gg.scala.discord.embed
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import revxrsal.commands.annotation.Command
 import revxrsal.commands.jda.annotation.RolePermission
-import revxrsal.commands.jda.core.BaseActorJDA
+import revxrsal.commands.jda.core.actor.BaseActorJDA
+
 
 /**
  * @author GrowlyX
@@ -102,9 +103,7 @@ object PanelCommands
             "- Log-in to our Minecraft server using `${ScalaDiscordApp.settings.serverAddress}`.",
             "- Run the `/link` command, and note down the alphanumeric code.",
             "- Click the **Link your account** button below and paste your code in the modal.",
-            "",
-            "**Need help?**",
-            "Create a ticket if you face any issues or have any questions during the linking process!"
+            ""
         )
 
         actor.channel.sendMessageEmbeds(embed.build())

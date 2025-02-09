@@ -9,7 +9,7 @@ import revxrsal.commands.annotation.Description
 import revxrsal.commands.annotation.Subcommand
 import revxrsal.commands.exception.CommandErrorException
 import revxrsal.commands.jda.annotation.RolePermission
-import revxrsal.commands.jda.core.BaseActorJDA
+import revxrsal.commands.jda.core.actor.BaseActorJDA
 
 /**
  * @author GrowlyX

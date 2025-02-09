@@ -64,7 +64,7 @@ object VerificationListener : ListenerAdapter()
             val player = guild.role("Member") ?: guild.role("Player")!!
             guild.addRoleToMember(event.author, player).queue()
 
-            event.message.reply("You've been verified in the **${ScalaDiscordApp.settings.serverName} Network** Discord Server, have fun!")
+            event.message.reply("You've been verified in the **${ScalaDiscordApp.settings.serverName}** Discord Server, have fun!")
                 .queue()
 
             ScalaDiscordVerificationService
