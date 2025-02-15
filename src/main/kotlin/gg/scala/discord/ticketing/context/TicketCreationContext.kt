@@ -8,10 +8,11 @@ enum class TicketCreationContext(
     val formattedDisplay: String
 )
 {
-    APPEAL("Punishment Appeal"),
-    STORE_SUPPORT("Store Support"),
+    RANK_CLAIMING("Rank Claiming"),
+//    APPEAL("Punishment Appeal"),
+//    STORE_SUPPORT("Store Support"),
     REWARD_CLAIMING("Reward Claiming"),
-    APPLICATION("Applications"),
-    BUG_REPORT("Bug Report"),
-    OTHER("Other")
+//    APPLICATION("Applications"),
+//    BUG_REPORT("Bug Report"),
+//    OTHER("Other")
 }

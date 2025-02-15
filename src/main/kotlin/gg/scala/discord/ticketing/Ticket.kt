@@ -161,7 +161,7 @@ class Ticket(
     {
         return this.findResponse("Category")
             ?.let { TicketCreationContexts.parse(it.content) }
-            ?: TicketCreationContext.OTHER
+            ?: TicketCreationContext.RANK_CLAIMING
     }
 
     fun addStageResponse(stage: TicketResponseStage, content: String)

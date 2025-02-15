@@ -5,8 +5,8 @@ import gg.scala.discord.language.Languages
 import gg.scala.discord.ticketing.Ticket
 import gg.scala.discord.ticketing.context.TicketCreationContext
 import gg.scala.discord.ticketing.context.TicketCreationContexts
-import gg.scala.discord.ticketing.response.extended.PunishmentTicketResponse
-import gg.scala.discord.ticketing.response.extended.TransactionTicketResponse
+//import gg.scala.discord.ticketing.response.extended.PunishmentTicketResponse
+//import gg.scala.discord.ticketing.response.extended.TransactionTicketResponse
 import gg.scala.flavor.service.Configure
 import gg.scala.flavor.service.Service
 
@@ -93,7 +93,7 @@ object TicketResponseStages
         orderedStages.add(CONTEXT)
         orderedStages.add(REASONING)
         // optional, extended responses
-        orderedStages.add(PunishmentTicketResponse)
-        orderedStages.add(TransactionTicketResponse)
+//        orderedStages.add(PunishmentTicketResponse)
+//        orderedStages.add(TransactionTicketResponse)
     }
 }

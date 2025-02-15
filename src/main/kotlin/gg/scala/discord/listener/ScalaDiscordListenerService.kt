@@ -1,7 +1,7 @@
 package gg.scala.discord.listener
 
+import MassMentionListener
 import gg.scala.discord.listener.impl.LargeContentListener
-import gg.scala.discord.listener.impl.MassMentionListener
 import gg.scala.discord.listener.impl.MemberJoinListener
 import gg.scala.discord.listener.impl.ReactionListener
 import gg.scala.discord.listener.impl.sync.DiscordSyncListener

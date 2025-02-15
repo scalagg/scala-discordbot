@@ -68,7 +68,7 @@ application {
 
 compileKotlin {
     kotlinOptions.javaParameters = true
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 shadowJar {

@@ -41,6 +41,7 @@ object Tickets
                 ticketName, event.message.category
             )
             .addPermissionOverride(event.member!!, listOf(
+                Permission.MESSAGE_SEND,
                 Permission.VIEW_CHANNEL,
                 Permission.MESSAGE_HISTORY,
                 Permission.MESSAGE_EMBED_LINKS,
@@ -56,7 +57,15 @@ object Tickets
             .apply {
                 ScalaDiscordApp.settings.getSupportRoles(event.guild!!)
                     .forEach {
-                        addRolePermissionOverride(it.idLong, listOf(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), listOf())
+                        addRolePermissionOverride(it.idLong, listOf(
+                            Permission.MESSAGE_SEND,
+                            Permission.VIEW_CHANNEL,
+                            Permission.MESSAGE_HISTORY,
+                            Permission.MESSAGE_EMBED_LINKS,
+                            Permission.MESSAGE_ATTACH_FILES,
+                            Permission.MESSAGE_ADD_REACTION,
+                            Permission.MESSAGE_EXT_EMOJI
+                        ), listOf())
                     }
             }
             .queue { textChannel ->

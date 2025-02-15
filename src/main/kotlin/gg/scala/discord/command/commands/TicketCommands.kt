@@ -31,7 +31,7 @@ object TicketCommands
     }
 
     @RolePermission(
-        names = ["Support Team"]
+        names = ["Practice Staff", "Practice Admin"]
     )
     @Subcommand("add")
     @Description("Add a user to the current ticket.")
@@ -60,7 +60,7 @@ object TicketCommands
     }
 
     @RolePermission(
-        names = ["Support Team"]
+        names = ["Practice Staff", "Practice Admin"]
     )
     @Subcommand("remove")
     @Description("Remove a user from the current ticket.")
