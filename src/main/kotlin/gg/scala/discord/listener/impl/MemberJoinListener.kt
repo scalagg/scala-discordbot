@@ -25,7 +25,7 @@ object MemberJoinListener : ListenerAdapter()
             .firstOrNull()
 
         val member = event.guild
-            .getRolesByName("Default", true)
+            .getRolesByName("Defaultaaaaaa", true)
             .firstOrNull()
 
         if (member != null)
